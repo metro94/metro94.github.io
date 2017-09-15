@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>USB标准的开发计划与文章列表 | MetroCores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
+<meta name="keywords" content="usb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USB标准的开发计划与文章列表">
+<meta property="og:url" content="http://www.metrocores.com/usb/index.html">
+<meta property="og:site_name" content="MetroCores">
+<meta property="og:description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.metrocores.com/usb/cy7c68013a-devboard.jpg">
+<meta property="og:image" content="http://www.metrocores.com/usb/cyusb3kit-003.jpg">
+<meta property="og:image" content="http://www.metrocores.com/usb/stm32f103xb-diagram.jpg">
+<meta property="og:image" content="http://www.metrocores.com/usb/lpc-link-2.jpg">
+<meta property="og:updated_time" content="2017-09-15T13:59:35.851Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="USB标准的开发计划与文章列表">
+<meta name="twitter:description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
+<meta name="twitter:image" content="http://www.metrocores.com/usb/cy7c68013a-devboard.jpg">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MetroCores</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.metrocores.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-usb/index" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/usb/index.html" class="article-date">
+  <time datetime="2017-09-14T11:30:00.000Z" itemprop="datePublished">2017-09-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/usb/">usb</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      USB标准的开发计划与文章列表
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。<br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.<br><a id="more"></a></p>
+<h2 id="USB简介"><a href="#USB简介" class="headerlink" title="USB简介"></a>USB简介</h2><p>众所周知，USB接口是目前最通用的外设接口，没有之一。迄今为止，USB已经走过了20多个年头，从刚开始的USB 1.0<em>(1.5 Mbps)</em>到现在的USB 3.1<em>(10 Gbps)</em>，虽然速度差了三四个数量级，但相互之间仍然可以兼容——这正是USB标准长盛不衰的秘诀之一。无论什么时候研究USB都不会过时。<br>但是，或许因为USB实在是太过<em>universal</em>了，USB标准的内容到现在已经变得非常庞杂。我们来列举一下使用了USB接口的（标准）设备：</p>
+<ul>
+<li>手机，包括数据传输和充电</li>
+<li>计算机的大部分外设，例如键盘、鼠标、U盘等，这些外设大多支持即插即用<em>(Plug and Play)</em></li>
+<li>USB Hub，将一个USB接口扩展为多个，并且可以使用其他电源</li>
+<li>车载设备<em>(USB Car Kit)</em>，可以复用USB接口进行UART协议的传输</li>
+<li>其他兼容性用途</li>
+</ul>
+<p>可以看到，USB标准需要兼顾到各个方面的设计，从硬件到软件都需要合理设计才能符合标准的要求。不过，随着各式各样的IC、SoC和开发套件的发布，开发者需要考虑的事情越来越少了。现在，我们就将关注的重点放在USB的核心——即<strong>USB传输协议</strong>上面，剩下的就丢给硬件工程师完成就行了。<del>（硬件工程师：mmp）</del><br>当然，就传输协议而言，USB也不是个善茬。我们可以将USB设备分为两类，分别为“<strong>即插即用</strong>”<del>（看协议标准看得抓狂）</del>和“<strong>非即插即用</strong>”<del>（写独占驱动写得扎心）</del>，分别对应了通用型设备和专用型设备。其实这么做也是可以理解的：像U盘这样的外设，让用户自己找驱动装简直是反人类，更不用说刚买的键盘鼠标连用都没法用还怎么去操作电脑（滑稽）；但是操作系统也没有义务支持像FPGA调试器这样的设备，就算支持了驱动也很难维持在最新版本。</p>
+<p>说句实在话，我们很难想象当时的开发人员是怎样开发USB设备的。现在，不仅有跨平台编写的通用驱动<em>（例如libusb）</em>，还有各种各样极为廉价的支持USB的SoC<em>（例如STM32F103）</em>，更有完整的工具和代码支持。USB的开发已经越来越简单了，而且做出来插电脑就能用，还是很有成就感的。</p>
+<p><del>其实选择先研究USB是有原因的，一个是CY7C68013A是我开发计划中唯一一个8051单片机，而有关ARM单片机的研究，我打算放到Cortex-M架构研究之后再谈；另一个是用CY7C68013A可以做个简单的逻辑分析仪，可以用来分析中低速协议的波形。我是不是很聪明呢？</del></p>
+<h2 id="可选的解决方案"><a href="#可选的解决方案" class="headerlink" title="可选的解决方案"></a>可选的解决方案</h2><p>USB的解决方案可谓是百花齐放，覆盖了各个层次。既有适合进行大量数据传输的设备，也有适合低带宽的控制型设备。</p>
+<h3 id="Cypress-EZ-USB"><a href="#Cypress-EZ-USB" class="headerlink" title="Cypress EZ-USB"></a>Cypress EZ-USB</h3><p>在众多USB解决方案中，Cypress的EZ-USB系列可谓是独树一帜。该系列主要面向大数据量的数据传输，随着方案的不同，可以提供MIPI、SD等接口，但最受欢迎的还是<strong>GPIF</strong>接口。配合FPGA/CPLD，可以完成各种复杂协议的模拟<em>（当然速度不能快过USB的传输速度啦）</em>，而且成本低廉，可以在数百元的价位上搞定，可谓是某些特殊应用的“救星”。举个例子，Xilinx的Platform Cable USB<em>（也就是那个下载器）</em>就是CY7C68013A + Xilinx CPLD的方案，成本不到100。<br>目前，EZ-USB的主流方案有两个，一个是EZ-USB FX2LP<em>（例如CY7C68013A）</em>，一个是EZ-USB FX3<em>（例如CYUSB3300）</em>，分别对应了USB 2.0 HS和USB 3.0 SS。前者可以直接在淘宝上购买，大概20多块<del>（虽然听说CY7C68013A有假货）</del>；后者则建议直接购买官方的<em>CYUSB3KIT-003 EZ-USB® FX3™ SuperSpeed Explorer Kit</em>套件，虽然价格有点小贵<em>（300多）</em>，但是板上自带了J-Link调试器，而且比淘宝的大多数套件都要便宜，因此有兴趣也可以买个玩玩。不管选择的是哪种套件，都有现成的文档、工具和测试应用，即使是初学者也能迅速入门。</p>
+<p><img src="cy7c68013a-devboard.jpg" alt="淘宝上的CY7C68013A开发板"></p>
+<p><img src="cyusb3kit-003.jpg" alt="CYUSB3KIT-003 EZ-USB® FX3™ SuperSpeed Explorer Kit"></p>
+<p>优点：</p>
+<ul>
+<li>价格低廉，通常仅为通用型方案的几分之一</li>
+<li>GPIF的功能强大，而且配合设计工具配置难度不高</li>
+<li>开发目的性强，适合搭配FPGA使用</li>
+<li>开发流程短，文档和工具齐全</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>CPU性能较同类产品偏低，难以单独完成复杂逻辑</li>
+<li>片上资源少，仅支持I2C、UART<em>（不包括56引脚的EZ-USB FX2LP）</em>、I2S<em>（仅EZ-USB FX3）</em>、SPI<em>（仅EZ-USB FX3）</em>，没了</li>
+<li>只有EZ-USB FX3支持OTG，还是USB 2.0 HS，还是老老实实当外设用吧<del>（不过看在CPU确实不行的份上，忍了）</del></li>
+<li>EZ-USB FX2LP系列无调试功能，毕竟51单片机嘛</li>
+</ul>
+<h3 id="支持USB-2-0-FS的单片机"><a href="#支持USB-2-0-FS的单片机" class="headerlink" title="支持USB 2.0 FS的单片机"></a>支持USB 2.0 FS的单片机</h3><p>看清楚，虽然写着USB 2.0，但还有一个FS<em>(Full Speed = 12 Mbps)</em>，速度还是比较低的，对于单片机来说完全没有问题<del>（毕竟都是3.3V，谁怕谁呀）</del>。<br>USB 2.0 FS作为中低端单片机的常见外设已经是见怪不怪了。目前最受欢迎的STM32F103单片机正是价格最便宜的、带USB 2.0 FS的Cortex-M3系列单片机。虽然也有更为廉价的解决方案，但是STM32F103的价格也并不高<del>（特别是在神奇的淘宝上）</del>，并且广泛应用于鼠标、USB音箱等设备上。而且STM32还有杀招：STM32Cube，可以大大简化开发工作，同样非常适合新手入门。<br>很明显，像STM32F103这类单片机，最适合的工作就是作为低速通用型设备使用，也就是说需要配合设备类<em>(USB Class)</em>的相关协议。当然，利用丰富的外设，做个读卡器什么的也不是不可以，ST Link V2就是基于STM32F103做成的<del>（所以淘宝山寨货的价格也非常低，不到20）</del>，实现起来一样不麻烦。至于对传输速度有要求的应用，那就不好意思了。</p>
+<p><img src="stm32f103xb-diagram.jpg" alt="STM32F103xB的结构框图"></p>
+<p>优点：</p>
+<ul>
+<li>价格同样低廉</li>
+<li>CPU性能足够，可以用于复杂控制</li>
+<li>片上资源丰富，方便进行其他功能设计</li>
+<li>开发流程短，文档和工具齐全</li>
+<li>调试方便</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>USB速度较低，不适合大数据量的传输</li>
+</ul>
+<h3 id="支持USB-2-0-HS的单片机"><a href="#支持USB-2-0-HS的单片机" class="headerlink" title="支持USB 2.0 HS的单片机"></a>支持USB 2.0 HS的单片机</h3><p>支持USB 2.0 HS的单片机基本上都是高端系列的了，价格可能比一些Cortex-A系列的SoC还要贵上不少。当然，这类单片机一般卖的是外设和低功耗，硬件设计一般也会方便一些，可以说是各取所需吧。有的单片机直接内置了USB 2.0 HS PHY，而有的还需要加上ULPI接口的PHY<del>（没错我说的就是你STM32）</del>，使用起来倒是不麻烦。<br>这类解决方案通常应用不算广泛，但在特定范围内可能是无可替代的。举个例子，NXP的LPC 4300系列就是外设有特点的典型，不仅支持SGPIO，可以用来模拟串行总线协议<del>（这很FPGA）</del>，而且更是在LPC4370中内置了80 MHz的12位ADC。J-Link V10正是使用了LPC4337单片机。很明显，这类单片机的USB接口的作用基本上都是快速传输大量数据。</p>
+<p><img src="lpc-link-2.jpg" alt="NXP LPC Link 2（使用LPC4370）"></p>
+<p>由于这类单片机的应用范围较窄，因此不再提及优缺点。</p>
+<h3 id="支持USB-2-0-3-0的高性能SoC"><a href="#支持USB-2-0-3-0的高性能SoC" class="headerlink" title="支持USB 2.0/3.0的高性能SoC"></a>支持USB 2.0/3.0的高性能SoC</h3><p>这里的高性能SoC，指的主要是使用Cortex-A系列CPU的SoC。这类SoC通常运行操作系统，因此USB主要作为主机控制器<em>(Host Controller)</em>使用，一般需要相应的协议栈支持。一般来说，要支持完整的USB主机控制器是非常复杂的，但是如果仅仅是支持部分特定协议<em>（如HID、CDC等设备类）</em>的话还是容易完成的，这也就是中低端单片机支持USB OTG的必要条件。</p>
+<p>这个就不多说了，就看到时候有没有足够的钱和心情研究这个了，哈哈。</p>
+<h3 id="FPGA-PHY"><a href="#FPGA-PHY" class="headerlink" title="FPGA + PHY"></a>FPGA + PHY</h3><p>如果有特定需求的话，在FPGA上添加一个USB控制器的IP<em>（似乎被称为SIE？）</em>，再配合ULPI接口的PHY，也是个可以考虑的解决方案。当然USB的IP也不是这么容易的，就等着哪一天有这个项目需求吧。</p>
+<h2 id="开发计划"><a href="#开发计划" class="headerlink" title="开发计划"></a>开发计划</h2><p>开发计划是我们人为定的目标，力求做到实用性，并且整体上有合适的学习曲线。目前想到了几个开发计划，列举如下。</p>
+<h3 id="CY7C68013A"><a href="#CY7C68013A" class="headerlink" title="CY7C68013A"></a>CY7C68013A</h3><ul>
+<li>逻辑分析仪，有现成的工具<em>(USBee AX)</em><del>（虽然用着盗版总觉得不好）</del></li>
+<li>LCD驱动器，可以使用RGB565或者8080/6800总线进行传输</li>
+<li>与FPGA的交互</li>
+</ul>
+<h3 id="STM32F103"><a href="#STM32F103" class="headerlink" title="STM32F103"></a>STM32F103</h3><ul>
+<li>HID，主要是键盘，一直挺想自己做个键盘的说</li>
+<li>CDC，记得ST有虚拟串口的例程，可以参考下</li>
+<li>Mass Storage，可以在电脑上对EEPROM、Flash或SD进行读写</li>
+<li>DFU，实现设备的自更新</li>
+</ul>
+<h2 id="文章列表"><a href="#文章列表" class="headerlink" title="文章列表"></a>文章列表</h2><h3 id="USB协议分析"><a href="#USB协议分析" class="headerlink" title="USB协议分析"></a>USB协议分析</h3><h3 id="CY7C68013A相关"><a href="#CY7C68013A相关" class="headerlink" title="CY7C68013A相关"></a>CY7C68013A相关</h3><h3 id="STM32F103相关"><a href="#STM32F103相关" class="headerlink" title="STM32F103相关"></a>STM32F103相关</h3>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.metrocores.com/usb/index.html" data-id="cj7lyy77z00064ulggytswnlv" class="article-share-link">Share</a>
+      
+        <a href="http://www.metrocores.com/usb/index.html#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">usb</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/brief-introduction-of-the-blog.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">博客简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">usb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">usb</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/usb/" style="font-size: 10px;">usb</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/usb/index.html">USB标准的开发计划与文章列表</a>
+          </li>
+        
+          <li>
+            <a href="/brief-introduction-of-the-blog.html">博客简介</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Metro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于我</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'metrocores';
+  
+  var disqus_url = 'http://www.metrocores.com/usb/index.html';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

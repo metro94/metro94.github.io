@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>USB 2.0标准手册和基本概念 | MetroCores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。">
+<meta name="keywords" content="USB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USB 2.0标准手册和基本概念">
+<meta property="og:url" content="http://www.metrocores.com/usb/usb-2.0-manual.html">
+<meta property="og:site_name" content="MetroCores">
+<meta property="og:description" content="本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-communication-flow-model.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-packet.svg">
+<meta property="og:updated_time" content="2017-09-16T13:12:10.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="USB 2.0标准手册和基本概念">
+<meta name="twitter:description" content="本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。">
+<meta name="twitter:image" content="http://www.metrocores.com/usb/usb-2.0-communication-flow-model.svg">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MetroCores</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.metrocores.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-usb/usb-2.0-manual" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/usb/usb-2.0-manual.html" class="article-date">
+  <time datetime="2017-09-16T04:00:00.000Z" itemprop="datePublished">2017-09-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/usb/">USB</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      USB 2.0标准手册和基本概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
+<h2 id="USB-2-0标准"><a href="#USB-2-0标准" class="headerlink" title="USB 2.0标准"></a>USB 2.0标准</h2><p>在USB 3.1尚未大规模普及的今天，USB 2.0仍是最常用的标准。有意思的是，USB 2.0标准同时将低速<em>(Low Speed, 1.5 Mbps)</em>、全速<em>(Full Speed, 12 Mbps)</em>和高速<em>(High Speed, 480 Mbps)</em>三种不同速度整合在一起，构成了一套较为完整的解决方案。<em>（而USB 3.1更像是USB 2.0的扩展，当然相互之间还是兼容的。）</em> </p>
+<p>值得一提的是，USB 2.0标准的眼光比I<sup>2</sup>C之类的协议要深远得多。USB 2.0标准包括但不限于以下这些内容：</p>
+<ul>
+<li><strong>机械和电气特性</strong>：很多协议都只定义了电气特性（即传输电平、速度等等），而USB 2.0由于速度快、物理接口<em>（也就是USB Type-C这种接口）</em>统一，因此对于机械特性也有详细的定义。</li>
+<li><strong>数据流模型</strong>：像SPI这样的协议只提供了传输的框架，至于传输的内容完全由用户定义；而USB 2.0提供了从主机<em>(Host)</em>到设备<em>(Device)</em>之间的完整的数据流模型，包括软硬件和扩展接口<em>(Hub)</em>等内容。值得一提的是，USB 2.0中的端点<em>(Endpoint)</em>和管道<em>(Pipe)</em>是基础中的基础，是制定以下内容的根据。</li>
+<li><strong>协议层</strong>：这个就不多说了，大家有的它都有，而且还有同步<em>(SYNC Field)</em>、错误检查和重传<em>(Error Detection and Recovery, using CRC)</em>机制，基本把传输可能遇到的意外情况都考虑到了。</li>
+<li><strong>设备和描述符</strong>：通过描述符<em>(Descriptor)</em>的方式，使得主机能够识别不同厂商、不同功能的设备，这也是USB 2.0实现即插即用<em>(Plug &amp; Play)</em>的重要条件。</li>
+<li><strong>USB设备类</strong>：这个部分之所以单独提出来，就是因为USB官方定义了一系列被称之为“设备类”的概念，允许不同厂商生产的功能相似的产品以相同的接口工作，从而大大简化驱动和应用的开发流程。如果没有设备类的概念，我们现在可能装个键盘和U盘都需要安装特定的驱动，可见其重要性。</li>
+</ul>
+<p>当然，前面我们提到过，我们只关注USB标准中的数据传输部分<del>（虽然QC什么的好像也很好玩）</del>，这样就可以花更少的篇幅把核心概念解释清楚。</p>
+<h2 id="USB-2-0标准的结构"><a href="#USB-2-0标准的结构" class="headerlink" title="USB 2.0标准的结构"></a>USB 2.0标准的结构</h2><p>在开始USB 2.0标准的概念介绍之前，我们现在看看USB 2.0标准的结构以及标准中的对应章节。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">USB Specification</div><div class="line">│   USB Interconnect</div><div class="line">│   ├───Physical Interface----------------------------------(Section 4.2)</div><div class="line">│   │   ├───Mechanical----------------------------------------(Chapter 6)</div><div class="line">│   │   └───Electrical----------------------------------------(Chapter 7)</div><div class="line">│   ├───Power-----------------------------------------------(Section 4.3)</div><div class="line">│   ├───Data Flow Models-------------------------(Section 4.7, Chapter 5)</div><div class="line">│   │   ├───Bus Topology</div><div class="line">│   │   ├───Communication Flow</div><div class="line">│   │   │   ├───Host</div><div class="line">│   │   │   │   ├───Host Controller</div><div class="line">│   │   │   │   ├───USB System Software</div><div class="line">│   │   │   │   └───Client Software</div><div class="line">│   │   │   ├───Interconnect</div><div class="line">│   │   │   │   ├───Pipe</div><div class="line">│   │   │   │   └───Pipe Bundle</div><div class="line">│   │   │   └───Device</div><div class="line">│   │   │       ├───Logical Device</div><div class="line">│   │   │       └───Function</div><div class="line">│   │   └───Transfer Types</div><div class="line">│   │       ├───Control Transfers</div><div class="line">│   │       ├───Isochronous Transfers</div><div class="line">│   │       ├───Interrupt Transfers</div><div class="line">│   │       └───Bulk Transfers</div><div class="line">│   └───Bus Protocol-----------------------------(Section 4.4, Chapter 8)</div><div class="line">│       ├───Packets</div><div class="line">│       ├───Frames and Microframes</div><div class="line">│       └───Device Endpoints and Pipes</div><div class="line">├───USB Device------------------------------------------------(Chapter 9)</div><div class="line">│   ├───USB Device States</div><div class="line">│   ├───USB Device Requests</div><div class="line">│   │   ├───Standard Device Requests</div><div class="line">│   │   ├───Class Device Requests</div><div class="line">│   │   └───Vendor Device Requests</div><div class="line">│   ├───Descriptors</div><div class="line">│   │   ├───Standard Device Descriptor</div><div class="line">│   │   ├───Device Qualifier Descriptor</div><div class="line">│   │   ├───Standard Configuration Descriptor</div><div class="line">│   │   ├───Other Speed Configuration Descriptor</div><div class="line">│   │   ├───Standard Interface Descriptor</div><div class="line">│   │   ├───Standard Endpoint Descriptor</div><div class="line">│   │   ├───String Descriptor</div><div class="line">│   │   └───Class Descriptor</div><div class="line">│   └───Device Class-------------------------------(Other Specifications)</div><div class="line">└───USB Host-------------------------------------------------(Chapter 10)</div><div class="line">    ├───Host Controller Driver</div><div class="line">    ├───USB Driver</div><div class="line">    └───Client</div></pre></td></tr></table></figure>
+<p>对于一般的USB应用开发，我们需要关注以下部分：</p>
+<ol>
+<li><strong>数据流模型</strong> <em>(Data Flow Model)</em>。基础。</li>
+<li><strong>协议层</strong> <em>(Protocol Layer)</em>。也是基础。</li>
+<li><strong>设备模型</strong> <em>(Device)</em>和<strong>描述符*</strong>(Descriptor)<em>。其中官方定义的描述符包括<strong>设备标准描述符</strong> </em>(Device Standard Descriptor)<em>和<strong>设备类描述符</strong></em> (Device Class Descriptor)*，前者必须实现，而后者则根据使用的设备类有不同的文档，请根据需要阅读相应文档。</li>
+<li><strong>客户端</strong> <em>(Client)</em>。国内习惯称之为“上位机”，指USB设备的驱动<em>（注意，和USB Driver的概念不同）</em>和相关的应用程序。如果使用某些通用的USB驱动库<em>（如libusb、WinUSB）</em>，可以减少客户端的编程复杂度。当然，如果使用了设备类的话，可以忽视这部分内容。</li>
+</ol>
+<p>看起来似乎不算多？总之先把概念的东西搞清楚才是当务之急。</p>
+<h2 id="USB-2-0的基本概念"><a href="#USB-2-0的基本概念" class="headerlink" title="USB 2.0的基本概念"></a>USB 2.0的基本概念</h2><h3 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h3><p>没啥好说的，简单概括一下：</p>
+<ol>
+<li>USB 2.0的拓扑结构是由<strong>Host</strong>、<strong>Device</strong>和<strong>Hub</strong>组成的<strong>树状结构</strong>。</li>
+<li>Host即为Host Controller，在拓扑结构中有且仅有一个并在树的根部，直接与名为Root Hub的特殊Hub相联。</li>
+<li>Hub<em>（包括Root Hub）</em>是特殊的Device，并且Hub可以向下接Hub或者Device，但非Hub的Device不能继续往下延伸。</li>
+<li>拓扑结果最多为7层，最多可接127个设备<em>（包括Hub）</em>。</li>
+<li>Hub自动完成数据的分发，Device不需关心Hub的存在。</li>
+</ol>
+<p>还有一点需要另外注意，就是在拓扑结构中提出了<strong>Compound Device</strong>的概念，目前通用的中文翻译为复合设备，指的是带Hub和Device的树状结构，是广义上的Device。<del>讲真感觉没啥卵用，还不如Hub和Device分离的结构来得好用。</del></p>
+<p>USB 2.0的标准中有拓扑结构的原理图，不过貌似有版权所以就不放了，见标准文档<sup>注1</sup>中的Figure 4-1。</p>
+<h3 id="通信流"><a href="#通信流" class="headerlink" title="通信流"></a>通信流</h3><p>以下这张图是我自己画的，应该能比较好地体现USB的通信流模型。本图参考了标准文档<sup>注1</sup>中的Figure 5-2和5-9，并作了适当修改。</p>
+<p><img src="usb-2.0-communication-flow-model.svg" alt="USB 2.0的通信流模型"></p>
+<p>我们先来纵向地看这个图。USB 2.0标准对通信流进行了详细的定义。首先，通信流模型被分为三个部分，分别是Interconnect、Host和Device。</p>
+<h4 id="Interconnect"><a href="#Interconnect" class="headerlink" title="Interconnect"></a>Interconnect</h4><p>Interconnect部分定义了Host和Device之间的连接。Interconnect是应该被首先考虑的部分，因为它定义了数据的交互和各个组件的事务处理范围。  </p>
+<ol>
+<li>最底层的部分是<strong>物理连接线</strong>。我们都知道，这代表了实际上的USB连接线。</li>
+<li>中间的一层是<strong>Pipe</strong>，即<strong>管道</strong>。顾名思义，Pipe代表了一条数据的<strong>传输通道</strong>。USB中的所有数据都是在Pipe上传播的，Pipe上发送的一组数据包组合成了一次有意义的传输。在USB 2.0标准中，Pipe最多有16个，其中有且仅有一个Pipe是特殊的，被称之为<strong>Default Pipe</strong>，可以用来配置其他的Pipe。除了Default Pipe之外，其他Pipe都可以根据Device的要求进行配置。</li>
+<li>最上面的一层是<strong>Pipe Bundle</strong>，字面上的意思就是<strong>管道集</strong><sup>注2</sup>。Pipe Bundle是一组Pipe的集合，如果说一个Pipe定义了一项具体的操作，那么一个Pipe Bundle通常代表了一系列操作组合成的一个完整的功能，例如对U盘操作就需要同时定义读写两条管道。</li>
+</ol>
+<h4 id="Host"><a href="#Host" class="headerlink" title="Host"></a>Host</h4><p>Host部分代表了USB中主动控制的一方。在USB结构中，Host一定是<strong>Master</strong>：这意味着几乎所有的操作<sup>注3</sup>都是由Host发起的，不管是读写还是配置。对应Interconnect，Host也有三个层次。</p>
+<ol>
+<li>最底层的部分是<strong>Host Controller</strong>，也就是<strong>主机控制器</strong>，是Host直接与Device交换数据的部分。Host Controller定义了USB Host的状态机，实现了状态之间的转换。Host Controller中的SIE<em>(Serial Interface Engine)</em>实现Framed Data和差分信号的相互转换，其功能类似于我们常说的PHY。</li>
+<li>位于中间是<strong>USB System</strong>，即USB总线的相关驱动。USB System用来管理设备，并且动态地维护Pipe的定义和数据。这一部分功能通常由操作系统来实现。</li>
+<li>最顶层是Client，包括了USB设备的驱动和使用USB设备的应用程序。驱动和应用程序通常使用一个或多个Pipe Bundle。</li>
+</ol>
+<h4 id="Device"><a href="#Device" class="headerlink" title="Device"></a>Device</h4><p>有主动就有被动，Device就是数据交互中的<strong>Slave</strong>一方。对应Interconnect，Device也有三个层次。</p>
+<ol>
+<li>最底层的部分是<strong>USB Bus Interface</strong>，其实就相当于Host Controller去掉了状态控制的部分，没啥好说的。</li>
+<li>中间是<strong>USB Logical Device</strong>，针对每个Pipe定义了一个接口，称之为<strong>Endpoint</strong>，即<strong>端点</strong>。Endpoint和Pipe一一对应，因此一共有16个Endpoint，其中对应于Default Pipe的是Endpoint 0。Endpoint是我们在USB Device开发中经常接触的一个概念，因此需要好好理解。</li>
+<li>那么剩下的就是<strong>Function</strong>了。Function是一个设备的所有功能的集合，Function可以被划分成多个Interface，每个Interface连接一系列Pipe Bundle，代表了每个不同的功能。</li>
+</ol>
+<p>在有了通信流的概念之后，就可以完整地定义USB的数据流模型了。</p>
+<h3 id="传输和传输类型"><a href="#传输和传输类型" class="headerlink" title="传输和传输类型"></a>传输和传输类型</h3><p>在USB中，数据交互的最基本单位是<strong>Transaction</strong>。一次Transaction包括了<strong>Token</strong>、<em>（可选的）</em> <strong>Data</strong>和<strong>Handshake</strong>这几种<strong>Packet</strong><sup>注4</sup>，而<em>（在一个Frame内的）</em>多个相关的Transaction则构成了一次<strong>Transfer</strong>。<del>（感觉像在说绕口令一样）</del></p>
+<p><img src="usb-2.0-packet.svg" alt="USB 2.0的Packet格式"></p>
+<p>上图可以发现一些有意思的地方：</p>
+<ol>
+<li>每个Packet都有一个SYNC Field。这是用来同步数据之间的传输的一段序列。在High Speed中，SYNC Field的长度为32 bit，而其他速度则为8 bit。</li>
+<li>PID是Packet Identifier Field的简称，表示一种特殊的结构<em>（4位源码+4位反码）</em>。需要注意的是，PID在不同Packet下的定义是不同的，具体请参照USB标准<sup>注1</sup>中的Section 8.3。</li>
+<li>Handshake Packet并没有CRC校验域，那么是如何确保Handshake包正确传输的呢？这就要涉及到Data Tongle Synchronization了，我们暂且不表。</li>
+</ol>
+<p>USB标准将Transfer划分为4种，分别是：</p>
+<ul>
+<li><strong>Control Transfer</strong>，即<strong>控制传输</strong></li>
+<li><strong>Isochronous Transfer</strong>，即<strong>同步传输</strong></li>
+<li><strong>Interrupt Transfer</strong>，即<strong>中断传输</strong></li>
+<li><strong>Bulk Transfer</strong>，即<strong>批量传输</strong></li>
+</ul>
+<p>Transfer的相关概念十分重要，我打算另开一篇文章来讲，未尽事宜可以参考USB标准<sup>注1</sup>中的Chapter 8。</p>
+<h3 id="总线协议"><a href="#总线协议" class="headerlink" title="总线协议"></a>总线协议</h3><p>完整的USB总线协议从低到高包括以下4个层次：</p>
+<ol>
+<li>Packet</li>
+<li>Frame &amp; Microframe</li>
+<li>Device Endpoints &amp; Pipes</li>
+<li>Interfaces &amp; Pipe Bundles<sup>注5</sup></li>
+</ol>
+<p>其他层次我们都介绍过了，接下来说说Frame和Microframe。<br>Frame和Microframe分别对应于LS/FS和HS设备，是一次Transfer的最大有效范围。Frame的长度为1 ms，而Microframe则为125 us，即把一个Frame等分为8个Microframe。在一个Frame或Microframe开始时，将会发送Start-of-Frame Packets，以进行FrameNumber域的同步。其他操作都会在SOF Packets后执行。</p>
+<h3 id="设备状态"><a href="#设备状态" class="headerlink" title="设备状态"></a>设备状态</h3><p>USB的设备状态指代设备从接入到配置之间以及暂停等所有可能状态。USB标准<sup>注1</sup>定义了所有可能的设备状态以及状态转换的条件，具体请参考Section 9.1部分。</p>
+<h3 id="设备请求"><a href="#设备请求" class="headerlink" title="设备请求"></a>设备请求</h3><p>在某些情况下，主机需要像设备请求信息，或者对Device进行配置，这其中用到的就是设备请求<em>(Device Requests)</em>。其中，USB标准定义了标准设备请求<em>(Standard Device Requests)</em>，以获得设备的基本信息并进行必要配置，设备需要实现这些请求。除此之外，还有Class Device Requests和Vendor Device Requests，我们遇到再提。</p>
+<h3 id="设备描述符"><a href="#设备描述符" class="headerlink" title="设备描述符"></a>设备描述符</h3><p>对应与设备请求，设备对于请求的回应被称为设备描述符<em>(Device Descriptor)</em>，用来描述设备的一系列行为。设备描述符提供了对设备功能的描述，这些信息足够主机能够识别并且正确配置设备。</p>
+<p>设备请求和设备描述符也是比较重要的内容，请参考后续的文章。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>USB的概念还是很多的，一篇文章讲完可能不大合适，因此我将一些重要的概念单独提出来进行分析，希望大家可以更好地理解。</p>
+<hr>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li><a href="http://www.usb.org/developers/docs/usb20_docs/" target="_blank" rel="external">USB Specification Revision 2.0</a></li>
+<li>管道集是我自己的翻译，貌似没有统一的翻译，大家开心就好。</li>
+<li>除了Remote Wakeup，这（似乎）是USB设备唯一一个可以主动发起的操作。</li>
+<li>还有SOF Packets，不过开发人员并不需要关心SOF Packets，Host Controller会自动进行同步控制。</li>
+<li>这个也是我擅自加进来的定义，感觉更符合实际情况。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.metrocores.com/usb/usb-2.0-manual.html" data-id="cj7nc1izz0007eulgcqddvizx" class="article-share-link">Share</a>
+      
+        <a href="http://www.metrocores.com/usb/usb-2.0-manual.html#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">USB</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/usb/index.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">USB标准的开发计划与文章列表</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">USB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">USB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/usb/" style="font-size: 10px;">USB</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/usb/usb-2.0-manual.html">USB 2.0标准手册和基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/usb/index.html">USB标准的开发计划与文章列表</a>
+          </li>
+        
+          <li>
+            <a href="/brief-introduction-of-the-blog.html">博客简介</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Metro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于我</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'metrocores';
+  
+  var disqus_url = 'http://www.metrocores.com/usb/usb-2.0-manual.html';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

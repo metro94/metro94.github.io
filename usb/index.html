@@ -5,22 +5,22 @@
   
   <title>USB标准的开发计划与文章列表 | MetroCores</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
-<meta name="keywords" content="usb">
+  <meta name="description" content="本页面简单介绍了我的USB开发计划，并且按照不同的分类列出了关于USB协议的文章。">
+<meta name="keywords" content="USB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="USB标准的开发计划与文章列表">
 <meta property="og:url" content="http://www.metrocores.com/usb/index.html">
 <meta property="og:site_name" content="MetroCores">
-<meta property="og:description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
+<meta property="og:description" content="本页面简单介绍了我的USB开发计划，并且按照不同的分类列出了关于USB协议的文章。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.metrocores.com/usb/cy7c68013a-devboard.jpg">
 <meta property="og:image" content="http://www.metrocores.com/usb/cyusb3kit-003.jpg">
 <meta property="og:image" content="http://www.metrocores.com/usb/stm32f103xb-diagram.jpg">
 <meta property="og:image" content="http://www.metrocores.com/usb/lpc-link-2.jpg">
-<meta property="og:updated_time" content="2017-09-15T13:59:35.851Z">
+<meta property="og:updated_time" content="2017-09-16T02:37:13.246Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="USB标准的开发计划与文章列表">
-<meta name="twitter:description" content="本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。原创文章，转载请注明出处：MetroCores, www.metrocores.com.">
+<meta name="twitter:description" content="本页面简单介绍了我的USB开发计划，并且按照不同的分类列出了关于USB协议的文章。">
 <meta name="twitter:image" content="http://www.metrocores.com/usb/cy7c68013a-devboard.jpg">
   
   
@@ -75,7 +75,7 @@
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/usb/">usb</a>
+    <a class="article-category-link" href="/categories/usb/">USB</a>
   </div>
 
   </div>
@@ -94,7 +94,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本页面简单介绍了我的开发计划，并且按照不同的分类列出了关于USB协议的文章。<br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.<br><a id="more"></a></p>
+        <p>本页面简单介绍了我的USB开发计划，并且按照不同的分类列出了关于USB协议的文章。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
 <h2 id="USB简介"><a href="#USB简介" class="headerlink" title="USB简介"></a>USB简介</h2><p>众所周知，USB接口是目前最通用的外设接口，没有之一。迄今为止，USB已经走过了20多个年头，从刚开始的USB 1.0<em>(1.5 Mbps)</em>到现在的USB 3.1<em>(10 Gbps)</em>，虽然速度差了三四个数量级，但相互之间仍然可以兼容——这正是USB标准长盛不衰的秘诀之一。无论什么时候研究USB都不会过时。<br>但是，或许因为USB实在是太过<em>universal</em>了，USB标准的内容到现在已经变得非常庞杂。我们来列举一下使用了USB接口的（标准）设备：</p>
 <ul>
 <li>手机，包括数据传输和充电</li>
@@ -146,7 +146,7 @@
 <h3 id="FPGA-PHY"><a href="#FPGA-PHY" class="headerlink" title="FPGA + PHY"></a>FPGA + PHY</h3><p>如果有特定需求的话，在FPGA上添加一个USB控制器的IP<em>（似乎被称为SIE？）</em>，再配合ULPI接口的PHY，也是个可以考虑的解决方案。当然USB的IP也不是这么容易的，就等着哪一天有这个项目需求吧。</p>
 <h2 id="开发计划"><a href="#开发计划" class="headerlink" title="开发计划"></a>开发计划</h2><p>开发计划是我们人为定的目标，力求做到实用性，并且整体上有合适的学习曲线。目前想到了几个开发计划，列举如下。</p>
 <h3 id="CY7C68013A"><a href="#CY7C68013A" class="headerlink" title="CY7C68013A"></a>CY7C68013A</h3><ul>
-<li>逻辑分析仪，有现成的工具<em>(USBee AX)</em><del>（虽然用着盗版总觉得不好）</del></li>
+<li>逻辑分析仪，有现成的工具<em>(USBee AX等)</em><del>（虽然用着盗版总觉得不好）</del></li>
 <li>LCD驱动器，可以使用RGB565或者8080/6800总线进行传输</li>
 <li>与FPGA的交互</li>
 </ul>
@@ -156,22 +156,36 @@
 <li>Mass Storage，可以在电脑上对EEPROM、Flash或SD进行读写</li>
 <li>DFU，实现设备的自更新</li>
 </ul>
-<h2 id="文章列表"><a href="#文章列表" class="headerlink" title="文章列表"></a>文章列表</h2><h3 id="USB协议分析"><a href="#USB协议分析" class="headerlink" title="USB协议分析"></a>USB协议分析</h3><h3 id="CY7C68013A相关"><a href="#CY7C68013A相关" class="headerlink" title="CY7C68013A相关"></a>CY7C68013A相关</h3><h3 id="STM32F103相关"><a href="#STM32F103相关" class="headerlink" title="STM32F103相关"></a>STM32F103相关</h3>
+<h2 id="文章列表"><a href="#文章列表" class="headerlink" title="文章列表"></a>文章列表</h2><h3 id="USB协议分析"><a href="#USB协议分析" class="headerlink" title="USB协议分析"></a>USB协议分析</h3><h3 id="CY7C68013A相关"><a href="#CY7C68013A相关" class="headerlink" title="CY7C68013A相关"></a>CY7C68013A相关</h3><h3 id="STM32F103相关"><a href="#STM32F103相关" class="headerlink" title="STM32F103相关"></a>STM32F103相关</h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>此次列出研究USB标准的主要参考资料。</p>
+<ol>
+<li><a href="http://www.usb.org/home" target="_blank" rel="external">USB官网</a></li>
+<li><a href="http://www.usb.org/developers/docs/usb20_docs/" target="_blank" rel="external">USB 2.0标准文档</a></li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.metrocores.com/usb/index.html" data-id="cj7lyy77z00064ulggytswnlv" class="article-share-link">Share</a>
+      <a data-url="http://www.metrocores.com/usb/index.html" data-id="cj7nc1izx0006eulgaqn2v4mw" class="article-share-link">Share</a>
       
         <a href="http://www.metrocores.com/usb/index.html#disqus_thread" class="article-comment-link">留言</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">usb</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">USB</a></li></ul>
 
     </footer>
   </div>
   
     
 <nav id="article-nav">
+  
+    <a href="/usb/usb-2.0-manual.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          USB 2.0标准手册和基本概念
+        
+      </div>
+    </a>
   
   
     <a href="/brief-introduction-of-the-blog.html" id="article-nav-older" class="article-nav-link-wrap">
@@ -198,7 +212,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">usb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">USB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
     </div>
   </div>
 
@@ -208,7 +222,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">usb</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">USB</a></li></ul>
     </div>
   </div>
 
@@ -218,7 +232,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/usb/" style="font-size: 10px;">usb</a>
+      <a href="/tags/usb/" style="font-size: 10px;">USB</a>
     </div>
   </div>
 
@@ -238,6 +252,10 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/usb/usb-2.0-manual.html">USB 2.0标准手册和基本概念</a>
+          </li>
         
           <li>
             <a href="/usb/index.html">USB标准的开发计划与文章列表</a>

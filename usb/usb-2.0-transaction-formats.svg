@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- 由 Microsoft Visio, SVG Export 生成 usb-2.0-transaction-formats.svg Page-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="6.12598in" height="3.79528in"
+		viewBox="0 0 441.071 273.26" xml:space="preserve" color-interpolation-filters="sRGB" class="st9">
+	<v:documentProperties v:langID="2052" v:metric="true" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="msvSubprocessMaster" v:prompt="" v:val="VT4(Box)"/>
+			<v:ud v:nameU="msvNoAutoConnect" v:val="VT0(1):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#5b9bd5;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st2 {fill:#ffffff;font-family:Calibri;font-size:4.00001em}
+		.st3 {fill:#ffffff;font-family:Calibri;font-size:1.99999em}
+		.st4 {fill:#73ae42;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st5 {fill:#ffffff;font-family:Calibri;font-size:2.50001em}
+		.st6 {fill:none;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st7 {fill:#000000;font-family:Calibri;font-size:1.5em}
+		.st8 {fill:#000000;font-family:Calibri;font-size:1.99999em}
+		.st9 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="msvThemeOrder" v:val="VT0(0):26"/>
+		</v:userDefs>
+		<title>页-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(18.1417,-170.079)">
+			<title>框</title>
+			<desc>OUT</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="127.559" cy="230.74" width="255.12" height="85.0394"/>
+			<rect x="0" y="188.22" width="255.118" height="85.0394" class="st1"/>
+			<text x="84.57" y="245.14" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>OUT</text>		</g>
+		<g id="shape2-4" v:mID="2" v:groupContext="shape" transform="translate(18.1417,-113.386)">
+			<title>框.2</title>
+			<desc>DATA0</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="63.7795" cy="244.913" width="127.56" height="56.6929"/>
+			<rect x="0" y="216.567" width="127.559" height="56.6929" class="st1"/>
+			<text x="30.58" y="252.11" class="st3" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>DATA0</text>		</g>
+		<g id="shape3-7" v:mID="3" v:groupContext="shape" transform="translate(18.1417,-56.6929)">
+			<title>框.3</title>
+			<desc>ACK</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="127.559" cy="244.913" width="255.12" height="56.6929"/>
+			<rect x="0" y="216.567" width="255.118" height="56.6929" class="st4"/>
+			<text x="103.09" y="253.91" class="st5" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>ACK</text>		</g>
+		<g id="shape4-10" v:mID="4" v:groupContext="shape" transform="translate(145.701,-113.386)">
+			<title>框.4</title>
+			<desc>MPS</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="63.7795" cy="244.913" width="127.56" height="56.6929"/>
+			<rect x="0" y="216.567" width="127.559" height="56.6929" class="st1"/>
+			<text x="41.81" y="252.11" class="st3" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>MPS</text>		</g>
+		<g id="shape5-13" v:mID="5" v:groupContext="shape" transform="translate(290.268,-184.252)">
+			<title>工作表.5</title>
+			<desc>Token Phase</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="244.913" width="136.07" height="56.6929"/>
+			<rect x="0" y="216.567" width="136.063" height="56.6929" class="st6"/>
+			<text x="21.88" y="250.31" class="st7" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>Token Phase</text>		</g>
+		<g id="shape6-16" v:mID="6" v:groupContext="shape" transform="translate(290.268,-113.386)">
+			<title>工作表.6</title>
+			<desc>Data Phase</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="244.913" width="136.07" height="56.6929"/>
+			<rect x="0" y="216.567" width="136.063" height="56.6929" class="st6"/>
+			<text x="27.14" y="250.31" class="st7" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>Data Phase</text>		</g>
+		<g id="shape7-19" v:mID="7" v:groupContext="shape" transform="translate(273.26,-56.6929)">
+			<title>工作表.7</title>
+			<desc>Handshake Phase</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="85.0394" cy="244.913" width="170.08" height="56.6929"/>
+			<rect x="0" y="216.567" width="170.079" height="56.6929" class="st6"/>
+			<text x="20.81" y="250.31" class="st7" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>Handshake Phase</text>		</g>
+		<g id="shape8-22" v:mID="8" v:groupContext="shape" transform="translate(77.6693,5.68434E-14)">
+			<title>工作表.8</title>
+			<desc>Transaction</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="244.913" width="136.07" height="56.6929"/>
+			<rect x="0" y="216.567" width="136.063" height="56.6929" class="st6"/>
+			<text x="11.03" y="252.11" class="st8" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>Transaction</text>		</g>
+	</g>
+</svg>

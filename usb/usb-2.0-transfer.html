@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>USB 2.0的传输策略详解 | MetroCores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。在阅读本文前，强烈建议读者首先阅读USB 2.0标准手册和基本概念，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。">
+<meta name="keywords" content="USB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USB 2.0的传输策略详解">
+<meta property="og:url" content="http://www.metrocores.com/usb/usb-2.0-transfer.html">
+<meta property="og:site_name" content="MetroCores">
+<meta property="og:description" content="本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。在阅读本文前，强烈建议读者首先阅读USB 2.0标准手册和基本概念，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-transaction-formats.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-control-transfers-sequences.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-isochronous-transfers-read-sequences.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-isochronous-transfers-write-sequences.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-interrupt-transfers-sequences.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-bulk-transfers-sequences.svg">
+<meta property="og:updated_time" content="2017-09-19T14:28:43.804Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="USB 2.0的传输策略详解">
+<meta name="twitter:description" content="本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。在阅读本文前，强烈建议读者首先阅读USB 2.0标准手册和基本概念，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。">
+<meta name="twitter:image" content="http://www.metrocores.com/usb/usb-2.0-transaction-formats.svg">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MetroCores</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.metrocores.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-usb/usb-2.0-transfer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/usb/usb-2.0-transfer.html" class="article-date">
+  <time datetime="2017-09-17T16:00:00.000Z" itemprop="datePublished">2017-09-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/usb/">USB</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      USB 2.0的传输策略详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。<br>在阅读本文前，强烈建议读者首先阅读<a href="/usb/usb-2.0-manual.html" title="USB 2.0标准手册和基本概念">USB 2.0标准手册和基本概念</a>，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
+<h2 id="USB-2-0的数据传输设计思路"><a href="#USB-2-0的数据传输设计思路" class="headerlink" title="USB 2.0的数据传输设计思路"></a>USB 2.0的数据传输设计思路</h2><p>咳咳，这似乎是个很大的话题。虽然先讲这个话题似乎不符合我们先思考后总结的习惯，但是我认为更重要的还是首先理解概念，之后再用概念来指导我们的设计，这也是符合设计方法学的思路。</p>
+<p>言归正传，USB 2.0的数据传输方式是经过精心设计的，最主要的目的就是：在尽可能<strong>降低设备的设计复杂度</strong>的前提下，提供多种传输方式，以应对不同场合的需要。这样做的原因也很简单：Host的部分可以被复用，而且已经有了完善的解决方案<em>（包括Host Controller、USB总线驱动和USB设备驱动）</em>；而Device的数量远大于Host，因此应该优先考虑Device的设计复杂度。<br>在USB标准<sup>注1</sup>中，关于数据传输的定义比较分散，我也只能做到管中窥豹，不过这对我们理解USB 2.0还是很有帮助的。</p>
+<h3 id="Host-is-Master-Device-is-Slave"><a href="#Host-is-Master-Device-is-Slave" class="headerlink" title="Host is Master, Device is Slave"></a>Host is Master, Device is Slave</h3><p>这个算是USB 2.0中最重要的概念之一了。为了降低Device的设计复杂度，Device被定义为只能<strong>被动接受</strong>来自Host的请求，包括设备配置和读写。我们来举几个例子：</p>
+<ul>
+<li>在Device插入时，Host会发送一系列的请求，以向Device请求设备的必要信息，Device必须及时回应。</li>
+<li>在从Device读取数据时，Host会首先向Device发送读取的请求，以向Device请求所需数据，Device可以在合适的时机返回Host所请求的数据。</li>
+<li>在向Device写入数据时，Host会首先向Device发送写入的请求，以请求Device接收所需数据，Device可以在合适的时机接收Host所提供的数据。</li>
+</ul>
+<p>可以看到，以上的几种情况都是由USB Host进行<strong>主动请求</strong>的，而Device只能在有限的范围内选择接受或者拒绝。这种设计虽然很大程度上剥夺了Device的主动权，但也确确实实简化了Device的设计，可以说是各有利弊吧。<br>Host虽然掌握着主动权，但这也就意味着Host必须承担更多的“责任”。USB标准规定，Host可以应对Device的所有需求，无论Device提出了什么条件，只要是符合标准的，Host都必须接受；但Host必须充分照顾Device的感受，对于Device无法响应的情况，Host必须准备好“紧急预案”。这么看来，虽然Host掌控所有的传输，但却要处处为Device着想，也算是难为它了。<br>这种设计思路也影响了下面提到的其他概念。我们常说USB 2.0是基于<strong>轮询</strong> <em>(polling)</em>的协议，而不是基于<strong>中断</strong> <em>(interrupt)</em><sup>注2</sup>的协议，就是这个原因。可以说，这是传输策略的根本。</p>
+<h3 id="由Device提供的Pipe配置"><a href="#由Device提供的Pipe配置" class="headerlink" title="由Device提供的Pipe配置"></a>由Device提供的Pipe配置</h3><p>在<a href="/usb/usb-2.0-manual.html" title="USB 2.0标准手册和基本概念">USB 2.0标准手册和基本概念</a>中，我们提到了Pipe的概念。在USB 2.0中，Pipe的配置是根据Device的Interface和Endpoint的相关描述符得到的，Host必须接受来自Device的相关配置，并且建立合适的传输通道，也就是Pipe。<br>在USB标准<sup>注1</sup>中，我们提到了Default Pipe和Endpoint 0，这是Device在配置前就可以使用的，目的就是完成其他Pipe的配置。在正确配置之前，其它Pipe和Endpoint都是<strong>无效</strong>状态。</p>
+<h3 id="可变长度的Data-Packet"><a href="#可变长度的Data-Packet" class="headerlink" title="可变长度的Data Packet"></a>可变长度的Data Packet</h3><p>由于Device无法主动完成传输，Host无法在传输前确定需要传输的数据量，不论是读<em>（无法确认Device有多少待发送的数据）</em>还是写<em>（无法确认Device有多少空间可以被写入）</em>。因此，需要提供可变长度的Data Packet，以满足不同情况的需求。严格来说，Data Packet需要一套机制来确认Data Packet的传输已经结束<sup>注2</sup>，但我们可以暂时不用关心这个问题。<br>在讲到Descriptor的时候，我们会知道Data Packet的<strong>最大长度</strong>是由Endpoint Descriptor进行配置的，且每个Transaction只能有一个Data Packet。对于超过最大长度的传输，可以将其分为<strong>多个Transaction</strong>来传输，但是Transaction的数量仍受到其他方面的限制<em>（例如传输类型和Frame/Microframe的长度）</em>。</p>
+<h3 id="灵活的传输类型选择"><a href="#灵活的传输类型选择" class="headerlink" title="灵活的传输类型选择"></a>灵活的传输类型选择</h3><p>对于传输类型大家应该多少有些了解。USB 2.0标准<sup>注1</sup>中定义了4种传输类型。我翻阅过不少网上关于USB 2.0的文章，感觉虽然大家都知道这4种传输类型之间的区别，但能它们的原理都说清楚的还是不多。在本文后面的章节中，我们将会对传输类型进行相对完整的介绍、特点和限制。</p>
+<h3 id="Frame-amp-Microframe"><a href="#Frame-amp-Microframe" class="headerlink" title="Frame &amp; Microframe"></a>Frame &amp; Microframe</h3><p>USB 2.0标准<sup>注1</sup>中定义了Frame和Microframe，目的我觉得主要有两个：一个是用来同步Host和Device中的Frame Number，并提醒Device开始进行下一轮传输；另一个则是为各种传输模式提供合适的传输时机。相对来说后者更为重要。<br>那么问题来了，所谓的“传输时机”是怎么回事呢？后面讲到Descriptor时会提到<code>bInterval</code>这个参数，这同样是在Endpoint Descriptor中定义的。我们知道，USB 2.0是基于<strong>轮询</strong> <em>(polling)</em>机制的，因此Host会以数个Frame为间隔轮流向Device发起请求，间隔值正是由<code>bInterval</code>进行设置的。并且，一次传输被限制为只能在Frame/Microframe内部，以免影响下一个Frame/Microframe的传输。</p>
+<h3 id="错误检测和恢复机制"><a href="#错误检测和恢复机制" class="headerlink" title="错误检测和恢复机制"></a>错误检测和恢复机制</h3><p>最后就是错误检测和恢复机制了，这方面可是事关数据正确性的大事。看过<a href="usb-2.0-packets.svg">前面这个图</a>的同志应该能发现两件事：</p>
+<ol>
+<li>Token Packet和Data Packet都是有CRC校验的。也就是说，对于这两种Packet，我们可以得知是否被正确传输。</li>
+<li>Handshake Packet并没有CRC校验。但是，Handshake Packet同样是非常重要的，它表明了这次传输是否被正确接受。因此在USB标准<sup>注1</sup>中提出了<strong>Data Toggle Synchronization</strong>的概念，通过<strong>Data Packet</strong>中的PID域来表明当前的Transaction是否是上一个Transaction的<strong>重传</strong><sup>注3</sup>，从而可以得知上次传输的Handshake Packet是否被正确接受。</li>
+</ol>
+<p>在检测到错误之后，接下来要做的事情就是从<strong>错误中恢复</strong>。这种时候要根据具体情况来选择重新传输或是中止传输，请参照后续文章中关于Device的状态机的设计部分。</p>
+<h2 id="USB-2-0的传输格式"><a href="#USB-2-0的传输格式" class="headerlink" title="USB 2.0的传输格式"></a>USB 2.0的传输格式</h2><p>接下来的部分都是照本宣科，大概就是相当于语文课上“阅读并背诵全文”的那种内容。我就按照标准试着翻译下吧。  </p>
+<p>首先说明一下，在USB中除了CRC Field的所有Packets的存储和传输都是<strong>LSb First</strong>，也就是<strong>低位在前、高位在后</strong>。还有，PID虽然有8位，但实际上只有4位有效位，剩下4位是前四位的反码，用于确保PID被正确设置和传输。PID的格式如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">(LSb)</th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center">(MSb)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">PID<sub>0</sub></td>
+<td style="text-align:center">PID<sub>1</sub></td>
+<td style="text-align:center">PID<sub>2</sub></td>
+<td style="text-align:center">PID<sub>3</sub></td>
+<td style="text-align:center"><span style="text-decoration:overline;">PID</span><sub>0</sub></td>
+<td style="text-align:center"><span style="text-decoration:overline;">PID</span><sub>1</sub></td>
+<td style="text-align:center"><span style="text-decoration:overline;">PID</span><sub>2</sub></td>
+<td style="text-align:center"><span style="text-decoration:overline;">PID</span><sub>3</sub></td>
+</tr>
+</tbody>
+</table>
+<p>以下内容省略SYNC Field，因为这个东西是由SIE自动发出的，开发人员不需要关心。</p>
+<h3 id="Token-Packets"><a href="#Token-Packets" class="headerlink" title="Token Packets"></a>Token Packets</h3><p>Token Packets的格式如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Field</th>
+<th style="text-align:center">PID</th>
+<th style="text-align:center">ADDR</th>
+<th style="text-align:center">ENDP</th>
+<th style="text-align:center">CRC5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Bits</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+</tbody>
+</table>
+<h4 id="PID"><a href="#PID" class="headerlink" title="PID"></a>PID</h4><p>Token Packets中的PID定义如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">PID Name</th>
+<th style="text-align:center">PID<3:0></3:0></th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">OUT</td>
+<td style="text-align:center">0001B</td>
+<td style="text-align:center">从Host到Function，7位ADDR + 4位ENDP</td>
+</tr>
+<tr>
+<td style="text-align:center">IN</td>
+<td style="text-align:center">1001B</td>
+<td style="text-align:center">从Function到Host，7位ADDR + 4位ENDP</td>
+</tr>
+<tr>
+<td style="text-align:center">SOF</td>
+<td style="text-align:center">0101B</td>
+<td style="text-align:center">Start-of-Frame，11位Frame Number</td>
+</tr>
+<tr>
+<td style="text-align:center">SETUP</td>
+<td style="text-align:center">1101B</td>
+<td style="text-align:center">特殊的OUT Token，与OUT Token格式相同</td>
+</tr>
+</tbody>
+</table>
+<p>OUT Token和IN Token的定义很明显，这里就不多说了。<br>SOF Token指代SOF Packet，用于Frame/Microframe之间的同步，他把数据域中的ADDR和ENDP整合为<strong>11位的Frame Number</strong>，长度没有区别。<br>SETUP Token是特殊的OUT Token，主要用于控制传输中的<strong>Setup Stage</strong>。USB标准<sup>注1</sup>规定，Device对于SETUP transaction必须回应ACK<em>（表示成功接受）</em>或者不回应<em>（表示数据被破坏）</em>，不能有其它的回应。</p>
+<h4 id="ADDR"><a href="#ADDR" class="headerlink" title="ADDR"></a>ADDR</h4><p>ADDR是<strong>Host分配的地址</strong> <em>（这个地址对于Device作用不大，对于Hub比较有用，知道有这个数据就行）</em>，取值范围为0到127，其中0保留给未配置设备使用。</p>
+<h4 id="ENDP"><a href="#ENDP" class="headerlink" title="ENDP"></a>ENDP</h4><p>ENDP就是<strong>端点序号</strong>，取值范围为0到15。</p>
+<h4 id="CRC5"><a href="#CRC5" class="headerlink" title="CRC5"></a>CRC5</h4><p>我就写个表达式：G(X) = X^5 + X^2 + 1，懂的同学应该就知道这是什么意思了吧。不过要注意的是，在计算完表达式后，还需要进行<strong>取反操作</strong>，而且是以<strong>MSb First</strong>的方式进行存储的，即发送的时候<strong>先发送最高位、后发送低位</strong>，CRC16也是同理。这应该是考虑到了CRC的计算特点。</p>
+<h3 id="Data-Packets"><a href="#Data-Packets" class="headerlink" title="Data Packets"></a>Data Packets</h3><p>Data Packets的格式如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Field</th>
+<th style="text-align:center">PID</th>
+<th style="text-align:center">DATA</th>
+<th style="text-align:center">CRC16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Bits</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">0-8192</td>
+<td style="text-align:center">16</td>
+</tr>
+</tbody>
+</table>
+<h4 id="PID-1"><a href="#PID-1" class="headerlink" title="PID"></a>PID</h4><p>Data Packets中的PID定义如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">PID Name</th>
+<th style="text-align:center">PID<3:0></3:0></th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DATA0</td>
+<td style="text-align:center">0011B</td>
+<td style="text-align:center">数据包的偶数位</td>
+</tr>
+<tr>
+<td style="text-align:center">DATA1</td>
+<td style="text-align:center">1011B</td>
+<td style="text-align:center">数据包的奇数位</td>
+</tr>
+<tr>
+<td style="text-align:center">DATA2</td>
+<td style="text-align:center">0111B</td>
+<td style="text-align:center">用于HS下的高速等时传输的IN transaction</td>
+</tr>
+<tr>
+<td style="text-align:center">MDATA</td>
+<td style="text-align:center">1111B</td>
+<td style="text-align:center">用于HS下的高速等时传输的OUT transaction或分离传输</td>
+</tr>
+</tbody>
+</table>
+<p>感觉Data Packets中的PID突然抛出了好多概念……不急，我们等到传输类型的部分再仔细讲解。</p>
+<h4 id="DATA"><a href="#DATA" class="headerlink" title="DATA"></a>DATA</h4><p>DATA Field存放的当然就是要传输的数据啦。不过要注意，DATA Field要求必须是<strong>整Bytes</strong>传输，即Bits数为8的倍数，而且DATA Field的实际长度还跟传输类型和配置有关，这又是一个容易出错的地方。DATA Field可以为空，表示没有数据需要传输，但是Data Packets并<strong>不能被省略</strong>哦。</p>
+<h4 id="CRC16"><a href="#CRC16" class="headerlink" title="CRC16"></a>CRC16</h4><p>G(X) = X^16 + X^15 + X^2 + 1，其他和CRC5相同。</p>
+<h3 id="Handshake-Packets"><a href="#Handshake-Packets" class="headerlink" title="Handshake Packets"></a>Handshake Packets</h3><p>Handshake Packets只有一个PID，所以就不需要写表格了。</p>
+<h4 id="PID-2"><a href="#PID-2" class="headerlink" title="PID"></a>PID</h4><p>Handshake Packets中的PID定义如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">PID Name</th>
+<th style="text-align:center">PID<3:0></3:0></th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ACK</td>
+<td style="text-align:center">0010B</td>
+<td style="text-align:center">接收方成功接收了数据</td>
+</tr>
+<tr>
+<td style="text-align:center">NAK</td>
+<td style="text-align:center">1010B</td>
+<td style="text-align:center">接收状态的Device不能接收发送的数据，或者发送状态的Device不能发送数据</td>
+</tr>
+<tr>
+<td style="text-align:center">STALL</td>
+<td style="text-align:center">1110B</td>
+<td style="text-align:center">Endpoint处于停止状态，或者Control Pipe的请求不支持</td>
+</tr>
+<tr>
+<td style="text-align:center">NYET</td>
+<td style="text-align:center">0110B</td>
+<td style="text-align:center">Device成功接收了数据，但暂时无法接收下一组数据<em>（仅限HS）</em></td>
+</tr>
+</tbody>
+</table>
+<p>Handshake Packets的PID指代传输是否正确进行。这其中的后面三个状态容易被混淆起来，我们有必要仔细了解。<br><strong>NAK</strong>表示当前传输的数据没有被Device<strong>正确地发送或接收</strong>。一般发送NAK就是要求Host再一次发起之前的请求。对于HS下的情况，Host还可以先发送PING transaction来“试探”一下Device是否已经可以接收数据。<br><strong>NYET</strong>其实和ACK类似，表示Device已经成功接收了数据，只是<strong>暂时还不能处理下一组数据</strong>而已。对于NYET的处理方法和HS下的NAK类似，就是发送PING transaction。<br><strong>STALL</strong>是比较有意思的回应，表示的其实有两种情况：对于Control Pipe（对应Endpoint 0），STALL意味着Device不支持来自Host的请求，通常是由于SetConfiguration()、SetInterface()或者SetFeature()请求了<strong>不受Device支持</strong>的配置、接口或者特性引起的；而对于使用interrupt和bulk这两种传输方式的Endpoint，则意味着Endpoint被Host配置为<strong>Halt状态</strong>，此时Device对于这些Endpoint的请求必须回应STALL。STALL的具体用法就放在Descriptor部分来说明吧。</p>
+<h3 id="Special-Packets"><a href="#Special-Packets" class="headerlink" title="Special Packets"></a>Special Packets</h3><p>这个……实在是懒得说啊，虽然Special Packets有四种（其中一种是复用的，而PID为0000B的情况不使用），但对我们来说比较有用的也就是PING Transaction了吧。</p>
+<p>实际上，PING Token Packet的格式和OUT Token Packet基本一致<em>（此时的PID为0100B）</em>，Handshake Packet的格式也相同，只是PING transaction<strong>不带Data Packet</strong>而已<sup>注4</sup>。Device可以根据实际情况回应ACK、NAK和STALL，含义和Handshake Packets相同。注意Device此时<strong>不能回应NYET</strong>，因为传输并未进行。USB 2.0标准没有规定PING的发送间隔。<br>PING transaction的提出，解决了OUT Transaction中的<strong>效率</strong>问题。我们知道，OUT transaction是从Host到Device的传输。Device此时可能无法接收数据，但是Device只能等到OUT Transaction的Handshake Packet才能回应是否已经接收了数据，而且在LS/FS中，因为没有询问Device是否空闲的机制，故每次重新传输都需要进行完整的OUT Transaction，这会极大地<strong>浪费总线带宽</strong>。因此，PING Transaction的作用就是，在Device报告下次传输无法正常进行时，使用<strong>占用较低总线带宽</strong>的方式来询问Device是否准备好进行下一次传输。这是HS中的一项重大改进。</p>
+<p>关于PING Transaction的具体发送时机和与NACK的对比我打算放到设备状态机的部分再说，感兴趣的同学可以先看看USB标准<sup>注1</sup>中的Section 8.5.1。</p>
+<h2 id="USB-2-0的传输类型"><a href="#USB-2-0的传输类型" class="headerlink" title="USB 2.0的传输类型"></a>USB 2.0的传输类型</h2><p>在开始介绍USB 2.0的传输类型之前，我们再<em>（不厌其烦地）</em>回顾下几个基本概念：</p>
+<ol>
+<li>USB传输的最基本单位是<strong>Packet</strong>。Packets包括<strong>Token Packets</strong>、<strong>Data Packets</strong>和<strong>Handshake Packets</strong>，对应的时间段分别被称为Token Phase、Data Phase和Handshake Phase。</li>
+<li>多个Packets可以按照一定规律组合成<strong>Transaction</strong>。我们通常用Token Packets中的PID来区分Transaction，例如IN Transaction、OUT Transaction等。每种Transaction的Packets排列方式是固定的。</li>
+<li>多个Transaction可以按照一定规律组合成<strong>Transfer</strong>。USB 2.0标准<sup>注1</sup>中规定了4种Transfer Types，下面就会介绍这4种Transfer Types的格式。要注意一次Transfer必须在一个Frame/Microframe内。</li>
+</ol>
+<p>嗯，相信说到这里Transfer的概念已经比较清楚了。之后再提一下Transaction的格式。为了表述方便，我在下文中统一用如下形状来表示一次Transaction。<br><img src="usb-2.0-transaction-formats.svg" alt="USB 2.0的Transaction格式"></p>
+<p>可以看到，对于一个Transaction，可以划分为三个Phase，每个Phase都用适当的文字表示Packets所具有的属性，其中Data Packets的数据长度以Bytes为单位，并且用<code>MPS</code>来表示<code>wMaxPacketSize</code>。我们知道Token Phase是一定存在的，而Data Phase和Handshake Phase虽然不一定存在，但从图上还是容易区分这两种Phase的，这种表示方法应该没毛病。另外，我用<strong>蓝色</strong>表示<strong>从Host到Function</strong>，<strong>绿色</strong>表示<strong>从Function到Host</strong>。</p>
+<p>接下来就是4种传输类型的详细解释。为了方便，我们仅列出正确传输的情况，对于其他情况的讨论放在USB Device状态机部分。</p>
+<h3 id="Control-Transfers"><a href="#Control-Transfers" class="headerlink" title="Control Transfers"></a>Control Transfers</h3><p>即<strong>控制传输</strong>，是USB 2.0传输中最高的优先级<sup>注5</sup>。只有Endpoint 0可以作为Control Transfers的端点，且Endpoint 0必须存在。Control Transfers用于Device的<strong>枚举和配置</strong>。</p>
+<h4 id="传输序列"><a href="#传输序列" class="headerlink" title="传输序列"></a>传输序列</h4><p><img src="usb-2.0-control-transfers-sequences.svg" alt="Control Transfers的传输序列"></p>
+<p>Control Transfers的传输序列是最复杂的了。根据USB标准<sup>注1</sup>，我们可以划分成3个阶段。</p>
+<h5 id="Setup-Stage"><a href="#Setup-Stage" class="headerlink" title="Setup Stage"></a>Setup Stage</h5><p>其实就是一次SETUP Transaction，内容是USB Device Requests，读写都是一样的格式，且长度为<strong>8个字节</strong>。注意Data Packets的PID都是<strong>DATA0</strong>。</p>
+<h5 id="Data-Stage"><a href="#Data-Stage" class="headerlink" title="Data Stage"></a>Data Stage</h5><p>由0到多个Token方向与读写方向一致的Packets组成，表示要传输的控制数据。在Packets数量为0时，Data Stage不存在，此种情况只会发生在控制读取的情况下。这些Packets的PID从<strong>DATA1</strong>开始，每隔一个Packets就在<strong>DATA0和DATA1之间跳转一次</strong>。<br>Data Stage要求最后一个Packets之外的数据长度都为<code>wMaxPacketSize</code>，且最后一个Packet的数据长度必须小于<code>wMaxPacketSize</code>，当然可以为0。<br>对于LS Device，<code>wMaxPacketSize</code>为8 bytes；对于HS Device，<code>wMaxPacketSize</code>为64 bytes；而对于FS Device，则可以设置为8、16、32或64 bytes，这可以通过读取Device Descriptor中的<code>bMaxPacketSize0</code>来确定。我们应当遵循上述的规则来传输控制数据。</p>
+<h5 id="Status-Stage"><a href="#Status-Stage" class="headerlink" title="Status Stage"></a>Status Stage</h5><p>由一个Token方向与读写方向相反的Packets组成，表示控制传输的结果。我们在前面提到，Function提出的合理请求Host都必须接受，因此Status Stage反映的是<strong>Function是否能够处理此次传输</strong>，不论读写方向如何。USB标准定义了一套完整的应答机制，在此我们不再详细说明。<br>要注意的是，对于控制读取而言，Status Stage既可能是OUT Transaction<em>（对于LS/FS）</em>，也可能是PING Transaction<em>（对于HS）</em>。</p>
+<h4 id="限制条件"><a href="#限制条件" class="headerlink" title="限制条件"></a>限制条件</h4><p>USB标准提到，对于LS/FS Device，Control Transfer的时间最多为一个Frame中的<strong>10%</strong>；对于HS Device，则最多为<strong>20%</strong>。由于控制传输一般不用在数据量大的场合，所以能够传多少数据包对Device的开发人员来说可以不需要关心。不过呢，也正是由于数据的长度可变，Host可能需要先读取部分数据，以在发起传输前确定控制读入的数据量，这可以通过得到Device Descriptor得到。</p>
+<h3 id="Isochronous-Transfers"><a href="#Isochronous-Transfers" class="headerlink" title="Isochronous Transfers"></a>Isochronous Transfers</h3><p>即<strong>等时传输</strong>，传输优先级排在第二位。等时传输的特点十分鲜明：<strong>高优先级</strong>、<strong>低延迟</strong>、<strong>实时性高</strong>、<strong>无重传机制</strong>，主要用于视频、音频等对实时性要求较高的场合。</p>
+<h4 id="传输序列-1"><a href="#传输序列-1" class="headerlink" title="传输序列"></a>传输序列</h4><p><img src="usb-2.0-isochronous-transfers-read-sequences.svg" alt="Isochronous Transfers的读取序列"></p>
+<p><img src="usb-2.0-isochronous-transfers-write-sequences.svg" alt="Isochronous Transfers的写入序列"></p>
+<p>首先，LS不支持Isochronous Transfers，不用找了。<br>其次，FS和HS对于<code>wMaxPacketSize</code>的最大值定义并不相同。FS为<strong>1023 bytes</strong>，HS则为<strong>1024 bytes</strong>，而且HS中Host最多可以向一个Endpoint发起<strong>3次transactions</strong>，此时<code>wMaxPacketSize</code>需要被配置为1024 bytes，这种情况被称为高带宽传输<em>(high bandwidth transfer)</em>。<del>（所以1023是个什么情况，强迫症要发作了啊啊啊）</del><br>最后就是要解释一下传输序列了。前面已经说过Isochronous Transfers没有Handshake Phase。为了方便叙述，我分成三种情况来讨论。</p>
+<h5 id="FS-Device"><a href="#FS-Device" class="headerlink" title="FS Device"></a>FS Device</h5><p>在FS下，Host最多可以发起1个transaction，且使用DATA0作为PID。容易得到FS的最大传输速度为1,023 KB/s<sup>注6</sup>，对于12 MHz的总线频率来说，确实也不能有更高的要求了。</p>
+<h5 id="HS-Device-Read-Sequences"><a href="#HS-Device-Read-Sequences" class="headerlink" title="HS Device, Read Sequences"></a>HS Device, Read Sequences</h5><p>在HS下，Host最多可以发起3个transactions，并且以<strong>DATA2、DATA1、DATA0</strong>的顺序使用PID，并且最后一个一定是DATA0。Device在收到Token Packet之后即准备传输，传输的方式与Control Transfer相同，都是<strong>优先填满前面的IN Transactions</strong><sup>注7</sup>。容易得到HS的最大读取速度为24,576 KB/s，这个速度似乎不大能让人满意啊。</p>
+<h5 id="HS-Device-Write-Sequences"><a href="#HS-Device-Write-Sequences" class="headerlink" title="HS Device, Write Sequences"></a>HS Device, Write Sequences</h5><p>和读取的情况类似，唯一不同的是使用的PID。在写入的情况下，最后一个Data Packet的PID可能是DATA0<em>（1个transaction）</em>、DATA1<em>（2个transactions）</em>或者DATA2<em>（3个transactions）</em>，而前面的Data Packets统一使用<strong>MDATA</strong>作为PID。传输的方式也是<strong>优先填满前面的OUT Transactions</strong>。容易得到HS的最大写入速度也为24,576 KB/s。</p>
+<h4 id="等时传输模式选择"><a href="#等时传输模式选择" class="headerlink" title="等时传输模式选择"></a>等时传输模式选择</h4><p>看到这里可能会有疑问，为什么还有等时传输模式选择呢？理由很简单：Client、Host Controller和Device这三个部分的时钟并不一定是同步的，如果没有做好同步处理，就会导致数据的overrun或者underrun。因此，这里就需要根据实际情况来选择时钟的同步方式，这就是等时传输模式的选择。<br>等时传输模式共有3种，下面一一说明。</p>
+<h5 id="Synchronous"><a href="#Synchronous" class="headerlink" title="Synchronous"></a>Synchronous</h5><p>即<strong>同步传输</strong>，表示Client和Device的时钟都<strong>与SOF同步</strong>。这种情况下Client和Device都必须控制好数据的传输时机，否则就会造成overrun或者underrun。这对于Device来说通常是不好处理的，因为这意味着Device必须要<strong>动态调整</strong>SIE和FIFO之间的吞吐量，而这对Device来说通常是比较复杂的。</p>
+<h5 id="Asynchronous"><a href="#Asynchronous" class="headerlink" title="Asynchronous"></a>Asynchronous</h5><p>即<strong>异步传输</strong>，表示Client和Device的时钟都<strong>不与SOF同步</strong> <em>（也就是Free running）</em>，且Client和Device的时钟也为<strong>异步</strong>。这种模式下，数据的发送方不需要考虑同步，而接收方则需要“<strong>消耗</strong>”发送方传来的数据，因此这种模式更适合<strong>Host读入</strong>的情况。</p>
+<h5 id="Adaptive"><a href="#Adaptive" class="headerlink" title="Adaptive"></a>Adaptive</h5><p>即<strong>自适应传输</strong>，表示Client和Device的时钟都<strong>不与SOF同步</strong>，但Client和Device的时钟为<strong>同步</strong>。这种模式下，数据的接收方需要向发送方<strong>反馈</strong>其接收的情况，发送方则需要根据反馈来调整数据的发送时机。这通常需要使用额外的Endpoint，并且发送的反馈的数据格式也应该要事先约定好。具体的做法可以参考USB标准<sup>注1</sup>中的Section 5.12.4.2。这种模式更适合<strong>Host写入</strong>的情况。</p>
+<h4 id="限制条件-1"><a href="#限制条件-1" class="headerlink" title="限制条件"></a>限制条件</h4><p>USB标准提到，对于FS Device，Isochronous Transfer的时间最多为一个Frame中的<strong>90%</strong>；对于HS Device，则最多为<strong>80%</strong>。前面已经提到FS的最大速度为1,023 KB/s，而HS则为24,576 KB/s。Isochronous Transfer会与后面提到的Interrupt Transfers和Bulk Transfers<strong>共享带宽</strong>。</p>
+<h3 id="Interrupt-Transfers"><a href="#Interrupt-Transfers" class="headerlink" title="Interrupt Transfers"></a>Interrupt Transfers</h3><p>即<strong>中断传输</strong>，传输优先级排在第三位。Interrupt Transfers与Isochronous Transfers比较接近，都是以固定的时间间隔进行传输，最大的区别就在于Interrupt Transfer通过牺牲<strong>实时性</strong>来换取数据的<strong>校验</strong>和<strong>重传</strong>机制。</p>
+<h4 id="传输序列-2"><a href="#传输序列-2" class="headerlink" title="传输序列"></a>传输序列</h4><p><img src="usb-2.0-interrupt-transfers-sequences.svg" alt="Interrupt Transfers的传输序列"></p>
+<p>Interrupt Transfers的传输序列和Isochronous Transfers颇为不同，使用的是<strong>DATA0、DATA1交错</strong>的PID发送方式。用法也很简单：不管上一个Transaction用的是哪个PID，下一个Transaction只要换成另外一个就行了<sup>注8</sup>，就算是<strong>跨SOF</strong>也是一样。当然，在遇到Bus Reset、<code>SetInterface()</code>等情况时，下一个Transaction的PID需要从<strong>DATA0</strong>开始。<br>对于<code>wMaxPacketSize</code>，LS最大为8 bytes；FS最大为64 bytes；HS最大为1,024 bytes，外加最多可以配置为3个Data Packets。</p>
+<h4 id="限制条件-2"><a href="#限制条件-2" class="headerlink" title="限制条件"></a>限制条件</h4><p>USB标准提到，对于FS Device，Isochronous Transfer的时间最多为一个Frame中的<strong>90%</strong>；对于HS Device，则最多为<strong>80%</strong>。LS的最大速度为8 KB/s，FS的最大速度为64 KB/s，而HS则为24,576 KB/s。</p>
+<h3 id="Bulk-Transfers"><a href="#Bulk-Transfers" class="headerlink" title="Bulk Transfers"></a>Bulk Transfers</h3><p>即<strong>批量传输</strong>，传输优先级是最低的。Bulk Transfers与Control Transfers类似，传输的时机是与SOF<strong>异步</strong>的。Bulk Transfers虽然优先级最低，但由于在一个Frame/Microframe中可以发起<strong>多个</strong>Bulk Transfers，因此可以传输的数据量理论上是最大的。Bulk Transfers适用于<strong>高准确性</strong>、<strong>低实时性</strong>的传输，例如文件复制等。需要注意的是，LS并不支持Bulk Transfers。</p>
+<h4 id="传输序列-3"><a href="#传输序列-3" class="headerlink" title="传输序列"></a>传输序列</h4><p><img src="usb-2.0-bulk-transfers-sequences.svg" alt="Bulk Transfers的传输序列&lt;del&gt;（没错就是和中断传输一毛一样，不服来咬我啊）&lt;/del&gt;"></p>
+<p>在传输序列上，Bulk Transfers与Interrupt Transfers反倒是十分类似了，区别就只在于<code>wMaxPacketSize</code>可以设置的最大值了。同样都是基于<strong>DATA0、DATA1交错</strong>的PID发送方式。这里就不多做解释了。<br>对于<code>wMaxPacketSize</code>，FS最大为64 bytes；HS最大为512 bytes。</p>
+<h4 id="限制条件-3"><a href="#限制条件-3" class="headerlink" title="限制条件"></a>限制条件</h4><p>USB标准提到，对于FS Device，Isochronous Transfer的时间最多为一个Frame中的<strong>90%</strong>；对于HS Device，则最多为<strong>80%</strong>。最大速度没有其他限制。</p>
+<h2 id="各种传输的时间估计"><a href="#各种传输的时间估计" class="headerlink" title="各种传输的时间估计"></a>各种传输的时间估计</h2><p>这个可以去看看USB标准<sup>注1</sup>的Section 5.11.3，我实在是懒得贴了……</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>为了考虑多种可能的传输情况，USB 2.0标准中关于传输的部分设计得较为复杂。不过在看完本文后，应该已经了解了关于传输的大部分内容，剩下的也基本上都是平时不怎么需要在意的设计细节了。</p>
+<hr>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li><a href="http://www.usb.org/developers/docs/usb20_docs/" target="_blank" rel="external">USB Specification Revision 2.0</a></li>
+<li>其实就是EOP，EOP并不是Packet，这点与SO不同。</li>
+<li>注意Data Toggle Synchronization是在多个Transaction之间进行同步验证的。也就是说，Handshake Packet是否正确发送只能在下次传输开始后才能知道，而且下次的传输可能会因为各种原因导致Data Packet中的PID应当恢复到初始状态，从而无法判定Handshake的正确性。<del>这个问题仔细想想还是很蛋疼的<del></del></del></li>
+<li>PING transaction是为数不多的没有Data Packet的transaction。我没有找到USB 2.0标准中的相关文字，但是Figure 8-30中可以看到PING transaction确实没有Data Packet。</li>
+<li>准确来说SOF Packets最高，不过呢，who fxxking cares（滑稽</li>
+<li>所有的“传输速度”都指的是每个Endpoint的速度。实际上，应该可以在一个Frame/Microframe中发起多个不同Endpoint的Non-bulk Transfer，不过这还需要验证。</li>
+<li>我没有在标准中找到传输的数据使用更少的transactions的情况，例如在有transaction的情况下发送1024 bytes的数据。猜测应该是忽略前面的transactions，转而使用最后的transactions？</li>
+<li>有一种特殊情况是，上一个Transfer是Isochronous Transfers的写入，且上一个Transaction为DATA2。我没有在标准中找到这种情况应该如何处理，估计这也需要验证才行了。<del>（买不起USB协议分析仪心好痛）</del></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.metrocores.com/usb/usb-2.0-transfer.html" data-id="cj7rp4fnt000a7wlgrc4xaw8z" class="article-share-link">Share</a>
+      
+        <a href="http://www.metrocores.com/usb/usb-2.0-transfer.html#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">USB</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/usb/usb-2.0-manual.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">USB 2.0标准手册和基本概念</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">USB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">USB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/usb/" style="font-size: 10px;">USB</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/usb/usb-2.0-transfer.html">USB 2.0的传输策略详解</a>
+          </li>
+        
+          <li>
+            <a href="/usb/usb-2.0-manual.html">USB 2.0标准手册和基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/usb/index.html">USB标准的开发计划与文章列表</a>
+          </li>
+        
+          <li>
+            <a href="/brief-introduction-of-the-blog.html">博客简介</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Metro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于我</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'metrocores';
+  
+  var disqus_url = 'http://www.metrocores.com/usb/usb-2.0-transfer.html';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

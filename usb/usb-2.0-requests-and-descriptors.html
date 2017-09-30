@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>USB 2.0的请求与描述符 | MetroCores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文紧接着上文关于USB 2.0传输的话题，详细地介绍了USB 2.0标准中提到的请求与描述符这两个部分的内容。在阅读本文后，所有关于USB Device的标准部分均已介绍完毕，接下来便可开始实际的开发工作。在阅读本文前，建议读者首先阅读USB 2.0标准手册和基本概念和USB 2.0的传输策略详解这两篇文章。本文的难度主要集中于理解USB标准中关于请求和描述符的定义和细节，因此需要配合前两篇文章">
+<meta name="keywords" content="USB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USB 2.0的请求与描述符">
+<meta property="og:url" content="http://www.metrocores.com/usb/usb-2.0-requests-and-descriptors.html">
+<meta property="og:site_name" content="MetroCores">
+<meta property="og:description" content="本文紧接着上文关于USB 2.0传输的话题，详细地介绍了USB 2.0标准中提到的请求与描述符这两个部分的内容。在阅读本文后，所有关于USB Device的标准部分均已介绍完毕，接下来便可开始实际的开发工作。在阅读本文前，建议读者首先阅读USB 2.0标准手册和基本概念和USB 2.0的传输策略详解这两篇文章。本文的难度主要集中于理解USB标准中关于请求和描述符的定义和细节，因此需要配合前两篇文章">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-device-framework.svg">
+<meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-get-descriptor-configuration-example.svg">
+<meta property="og:updated_time" content="2017-09-30T14:44:50.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="USB 2.0的请求与描述符">
+<meta name="twitter:description" content="本文紧接着上文关于USB 2.0传输的话题，详细地介绍了USB 2.0标准中提到的请求与描述符这两个部分的内容。在阅读本文后，所有关于USB Device的标准部分均已介绍完毕，接下来便可开始实际的开发工作。在阅读本文前，建议读者首先阅读USB 2.0标准手册和基本概念和USB 2.0的传输策略详解这两篇文章。本文的难度主要集中于理解USB标准中关于请求和描述符的定义和细节，因此需要配合前两篇文章">
+<meta name="twitter:image" content="http://www.metrocores.com/usb/usb-2.0-device-framework.svg">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MetroCores</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">主页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://www.metrocores.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-usb/usb-2.0-requests-and-descriptors" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/usb/usb-2.0-requests-and-descriptors.html" class="article-date">
+  <time datetime="2017-09-29T16:00:00.000Z" itemprop="datePublished">2017-09-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/usb/">USB</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      USB 2.0的请求与描述符
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文紧接着上文关于USB 2.0传输的话题，详细地介绍了USB 2.0标准中提到的<strong>请求</strong>与<strong>描述符</strong>这两个部分的内容。在阅读本文后，所有关于USB Device的标准部分均已介绍完毕，接下来便可开始实际的开发工作。<br>在阅读本文前，建议读者首先阅读<a href="/usb/usb-2.0-manual.html" title="USB 2.0标准手册和基本概念">USB 2.0标准手册和基本概念</a>和<a href="/usb/usb-2.0-transfers.html" title="USB 2.0的传输策略详解">USB 2.0的传输策略详解</a>这两篇文章。本文的难度主要集中于理解USB标准中关于请求和描述符的定义和细节，因此需要配合前两篇文章的知识点才能正确理解USB 2.0标准的<strong>Requests</strong>和<strong>Descriptors</strong>。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
+<h2 id="再谈USB-2-0中的Control-Transfers"><a href="#再谈USB-2-0中的Control-Transfers" class="headerlink" title="再谈USB 2.0中的Control Transfers"></a>再谈USB 2.0中的Control Transfers</h2><p>在前文<a href="/usb/usb-2.0-transfers.html" title="USB 2.0的传输策略详解">USB 2.0的传输策略详解</a>中，我们谈到了Control Transfers<del>（和那相当蛋疼的传输序列）</del>。不过，我们有意忽略了一个问题：Control Transfers到底传输的是什么？没错，就是我们提到的<strong>请求</strong>和<strong>描述符</strong>。<br>接下来我们来梳理这几个相关的概念。</p>
+<h3 id="Requests"><a href="#Requests" class="headerlink" title="Requests"></a>Requests</h3><p>所谓的请求，用简单的语言概括，就是一次完整的Control Transfers。这样理解是没错的，但是为什么需要Requests呢？<br>在USB 2.0标准<sup>注1</sup>中，Requests的全称应当是<strong>USB Device Requests</strong>。Host通过Default Pipe这条通道，向Device进行请求，以获得Device的相关信息，并且对Device进行合理配置，主要目的是使Device的<strong>其他Endpoint</strong>可以根据Host的需要进行工作。<br>一条请求可以被分为<strong>Setup</strong>部分和<strong>Data</strong>部分，正好对应了Control Transfers中的Setup Stage和Data Stage。其中，Setup部分通常指明了请求的<strong>方向</strong>、<strong>类型</strong>、<strong>目标</strong>等多项属性，而<em>（可选的）</em>Data部分则用来传输一些<strong>额外信息</strong>，传输的方向由Setup部分决定。当然，一次有意义的传输还需要Status Stage，不过在这里我们可以暂时忽略。</p>
+<h3 id="Descriptors"><a href="#Descriptors" class="headerlink" title="Descriptors"></a>Descriptors</h3><p>描述符是一种特殊的数据结构，可以用来组成一次请求的Data Stage，但不是来自Device的回应都是描述符。对于Host的请求，有些Device需要回应的信息相对比较复杂，这个时候就需要用描述符这样的结构来表达了。描述符是一套Device与Host<em>（通过驱动）</em>事先“商定”好的“语言”，Host能够“阅读”并“翻译”来自Device的描述符。因此，描述符的全称也应当是<strong>Device Descriptors</strong>。  </p>
+<h3 id="Standard-Class-and-Vendor"><a href="#Standard-Class-and-Vendor" class="headerlink" title="Standard, Class and Vendor"></a>Standard, Class and Vendor</h3><p>在USB 2.0标准<sup>注1</sup>中，请求和描述符都可以被分成三种，即Standard、Class和Vendor，三者的定义和作用既相似又不同。<br><strong>Standard</strong><sup>注3</sup>用来描述在<strong>主标准</strong>中定义的请求和描述符。这些请求和描述符通常用来实现USB Device的<strong>最基本功能</strong>，例如识别设备、获取基本状态等。大部分的请求和描述符都是<strong>必须实现</strong>的，否则将会导致Host无法与设备进行正常交互。<br><strong>Class</strong>用来描述在<strong>设备类标准</strong><sup>注2</sup>中定义的请求和描述符。USB 2.0的相关标准中，将Device中一些共同的功能提取出来编成标准，就成了Device Class。设备类标准通常用于实现<strong>通用功能</strong>，如键盘、U盘等，设备可以<strong>选择性地实现</strong>多个设备类标准中的部分或所有功能。这样做的好处是，对于每一个Class，只需要提供通用驱动，就可以让遵循设备类标准的设备可以正常工作，从而大大降低了编写设备驱动的工作量。现在Class的标准数量已经非常巨大，能实现的功能也非常多，对于目前常用的设备基本上能提供良好的支持。<br><strong>Vendor</strong>则是一个产品上所使用的<strong>私有标准</strong>，通常是设备制造商<strong>自行定义</strong>的标准。在不与Standard和Class标准冲突的前提下，Vendor标准可以自由定义，从而使得设备的实现更加灵活。</p>
+<p>现在看来，Control Transfers的概念已经基本上都清楚了。本质上说，Default Pipe的作用就是用来传输<strong>低频率</strong>、<strong>低数据量</strong>的<strong>控制信息</strong>，从而使得其他的Pipes可以更好地工作。这也就是为什么Control Transfers的优先级最高的原因。</p>
+<h2 id="USB-Device的框架"><a href="#USB-Device的框架" class="headerlink" title="USB Device的框架"></a>USB Device的框架</h2><p>前面我们在<a href="usb-2.0-manual.html#通信流">通信流模型</a>中提到，USB Device的通信流可以分为三层，分别是Device、Interface和Endpoint。但是，在Device的总体框架中，为了得到更好的通用性，USB标准<sup>注1</sup>在Device和Interface之中又增加了名为<strong>Configuration</strong>的一层，并且在Endpoint中增加了名为<strong>Alternate Setting</strong>的属性，相当于是在Interface和Endpoint中增加了一层。这些新增的内容能让我们更好地设置Device的属性。 </p>
+<p><img src="usb-2.0-device-framework.svg" alt="USB Device Framework"></p>
+<p>USB Device的框架如上图所示。我们来自上而下地盘点一下。</p>
+<h3 id="Device"><a href="#Device" class="headerlink" title="Device"></a>Device</h3><p>指的是一个物理存在的设备，也就是<strong>设备实体</strong>。USB标准<sup>注1</sup>规定，一个Device只能有一对Vendor ID和Product ID，分别指代制造商和产品代号。除此之外，Device还包括了一些设备的基本信息，如使用的类和协议等。</p>
+<h3 id="Configurations"><a href="#Configurations" class="headerlink" title="Configurations"></a>Configurations</h3><p>指的是设备的<strong>配置信息</strong>。一个Configuration对应的是一组设备层次的属性和最大电流，以及包含的一组接口。目前来看，Configuration的作用就是提供不同供电条件下的不同配置，实际上用到Configuration的情况并不多。</p>
+<h3 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h3><p>指的是设备的<strong>接口</strong>。一个Interface对应的主要是一组端点，这些端点共同完成一项基本的功能<em>（如文件传输需要读写两个端点）</em>，当然也可以在Interface的层面定义使用的类和协议，还有所使用的可用配置<sup>注4</sup>。</p>
+<h3 id="Alternate-Settings"><a href="#Alternate-Settings" class="headerlink" title="Alternate Settings"></a>Alternate Settings</h3><p>指的是接口的<strong>可用配置</strong>。这是一个新的概念，主要用来对Interface进行额外的配置。通过为同一Interface设置不同的Alternate Settings，可以在设备运行时动态选择不同的Endpoints组合。默认情况下被选中的总是第0个可用配置。举个例子，可以通过指定Alternate Settings来设置bInterval的值，从而改变中断传输的传输频率。</p>
+<h3 id="Endpoints"><a href="#Endpoints" class="headerlink" title="Endpoints"></a>Endpoints</h3><p>指的是接口的<strong>端点</strong>。这个概念我们提了很多次，就不再赘述了。需要注意的是，Endpoints在Configurations以下的范围是不应该重复的，即一个端点只能被定义一次。</p>
+<p>从USB Device的框架出发，USB标准定义了USB Device的标准请求和标准描述符，并且允许Device在不与现有标准冲突的前提下定义Class和Vendor级别的请求和描述符。</p>
+<h2 id="请求的格式和类型"><a href="#请求的格式和类型" class="headerlink" title="请求的格式和类型"></a>请求的格式和类型</h2><p>USB Device Requests可以分为Standard、Class和Vendor，它们都遵循相同的格式。</p>
+<h3 id="请求的格式"><a href="#请求的格式" class="headerlink" title="请求的格式"></a>请求的格式</h3><p>Requests的Setup Stage<em>（即Setup Data）</em>为8 bytes的数据，内容如USB 2.0标准<sup>注1</sup>中的表格9-2所示，这里不再列出。</p>
+<h4 id="bmRequestType"><a href="#bmRequestType" class="headerlink" title="bmRequestType"></a>bmRequestType</h4><p>该变量记录了请求的基本信息，包括<strong>传输方向</strong>、<strong>请求类型</strong>和<strong>请求对象</strong>，共占用1个字节。这些信息有助于Device获得Data Stage和Status Stage需要完成的动作。</p>
+<h4 id="bRequest"><a href="#bRequest" class="headerlink" title="bRequest"></a>bRequest</h4><p>该变量表明这次请求的具体类型，共占用1个字节。该信息与请求类型通常是相关的。</p>
+<h4 id="wValue"><a href="#wValue" class="headerlink" title="wValue"></a>wValue</h4><p>该变量表明这次请求中需要传输的变量值，共占用2个字节。该信息与请求类型通常是相关的。</p>
+<h4 id="wIndex"><a href="#wIndex" class="headerlink" title="wIndex"></a>wIndex</h4><p>该变量表明这次请求中需要传输的变量值，该变量值通常用来表示索引值或偏移量，共占用2个字节。该信息与请求类型通常是相关的。</p>
+<h4 id="wLength"><a href="#wLength" class="headerlink" title="wLength"></a>wLength</h4><p>该变量表明这次请求中Data Stage的长度，以字节为单位，共占用2个字节。</p>
+<p>总的来说，Requests除了将bmRequestType和wLength之外，其他格式都是需要根据不同的请求类型进行定义的，这样可以增加请求格式的灵活性。Descriptors的思路也是相似的。</p>
+<h3 id="Standard-Requests"><a href="#Standard-Requests" class="headerlink" title="Standard Requests"></a>Standard Requests</h3><p>Standard Requests的bRequestType共有11种，如表9-4所示。每种Standard Requests的详细格式已在表9-3定义。</p>
+<h4 id="GET-DESCRIPTOR"><a href="#GET-DESCRIPTOR" class="headerlink" title="GET_DESCRIPTOR"></a>GET_DESCRIPTOR</h4><p>获取相应的描述符，Data Stage的传输方向是<strong>从Device到Host</strong>。可以选择的目标是<strong>Device</strong>、<strong>Configuration</strong>和<strong>String</strong>。到后面我们会了解到，描述符其实不只包括这三种，但是在回应Request时可能需要回应目标以外的描述符，这个稍后再说。</p>
+<h4 id="SET-DESCRIPTOR"><a href="#SET-DESCRIPTOR" class="headerlink" title="SET_DESCRIPTOR"></a>SET_DESCRIPTOR</h4><p>设置相应的描述符，Data Stage的传输方向是<strong>从Host到Device</strong>。可以选择的目标同样是<strong>Device</strong>、<strong>Configuration</strong>和<strong>String</strong>。顾名思义，这是用来设置描述符的Request，被设置的描述符必须存在<sup>注5</sup>。这个Request似乎很少被用到。</p>
+<h4 id="GET-CONFIGURATION"><a href="#GET-CONFIGURATION" class="headerlink" title="GET_CONFIGURATION"></a>GET_CONFIGURATION</h4><p>获取当前使用的Configuration Number，Data Stage的传输方向是<strong>从Device到Host</strong>。要注意获取的不是Configuration Descriptor。</p>
+<h4 id="SET-CONFIGURATION"><a href="#SET-CONFIGURATION" class="headerlink" title="SET_CONFIGURATION"></a>SET_CONFIGURATION</h4><p>设置当前使用的Configuration Number，没有Data Stage。与描述符一样，设置时必须指定合法的Configuration Number。</p>
+<h4 id="GET-INTERFACE"><a href="#GET-INTERFACE" class="headerlink" title="GET_INTERFACE"></a>GET_INTERFACE</h4><p>获取某个Interface当前使用的Alternate Setting，Data Stage的传输方向是<strong>从Device到Host</strong>。要注意获取的不是Interface Descriptor。</p>
+<h4 id="SET-INTERFACE"><a href="#SET-INTERFACE" class="headerlink" title="SET_INTERFACE"></a>SET_INTERFACE</h4><p>设置某个Interface当前使用的Alternate Setting，没有Data Stage。与描述符一样，设置时必须指定合法的Interface Number和Alternate Setting。</p>
+<h4 id="SET-FEATURE"><a href="#SET-FEATURE" class="headerlink" title="SET_FEATURE"></a>SET_FEATURE</h4><p>设置相应的特性，没有Data Stage。可以选择的目标是<strong>Device</strong>、<strong>Configuration</strong>和<strong>Endpoint</strong>。目前支持的feature有三项，除了DEVICE_REMOTE_WAKEUP和ENDPOINT_HALT<em>（这两个一看名字就知道目标是谁了）</em>之外，还有目标为Device的TEST_MODE。</p>
+<h4 id="CLEAR-FEATURE"><a href="#CLEAR-FEATURE" class="headerlink" title="CLEAR_FEATURE"></a>CLEAR_FEATURE</h4><p>清除相应的特性，同样没有Data Stage。可以选择的目标同样是<strong>Device</strong>、<strong>Configuration</strong>和<strong>Endpoint</strong>。要注意的是，无法通过CLEAR_FEATURE退出TEST_MODE，而只能通过重新上电的方式退出<sup>注6</sup>。其他与SET_FEATURE相同。</p>
+<h4 id="GET-STATUS"><a href="#GET-STATUS" class="headerlink" title="GET_STATUS"></a>GET_STATUS</h4><p>获得相应的状态，Data Stage的传输方向是<strong>从Device到Host</strong>。可以选择的目标是<strong>Device</strong>、<strong>Configuration</strong>和<strong>Endpoint</strong>。虽然如此，实际上可以获得的Status只有Remote Wakeup<em>(Device)</em>、Self Powered<em>(Device)</em>和Halt<em>(Endpoint)</em>这三项。</p>
+<h4 id="SET-ADDRESS"><a href="#SET-ADDRESS" class="headerlink" title="SET_ADDRESS"></a>SET_ADDRESS</h4><p>为设备指定Address，没有Data Stage。Address用来识别总线上的设备，一般只在初始化的Address阶段由Host发送。</p>
+<h4 id="SYNCH-FRAME"><a href="#SYNCH-FRAME" class="headerlink" title="SYNCH_FRAME"></a>SYNCH_FRAME</h4><p>设置用于同步的Frame Number，Data Stage的传输方向是<strong>从Device到Host</strong>。这项功能仅在使用等时传输时需要用到，作用是与Host共同确认用来传输<strong>同步信息</strong>的Frame。所谓的同步信息的定义是依赖于实现的，标准仅提供了基本的框架。</p>
+<h3 id="Class-Requests"><a href="#Class-Requests" class="headerlink" title="Class Requests"></a>Class Requests</h3><p>Class Requests包含了设备类标准中定义的各种请求<sup>注2</sup>，这些请求都符合相关设备类的标准。Class Requests的bmRequestType的D6…5被指定为Class。</p>
+<p>Class Requests的定义在设备类标准中可以查阅到。有些Class Requests可能大家已经耳熟能详了，比如HID中的GET_REPORT和SET_REPORT。有兴趣的读者可以关注后面对于具体设备类的分析的文章。</p>
+<h3 id="Vendor-Requests"><a href="#Vendor-Requests" class="headerlink" title="Vendor Requests"></a>Vendor Requests</h3><p>Vendor Requests包含了Vendor自定义的标准中定义的各种请求。Class Requests的bmRequestType的D6…5被指定为Vendor。</p>
+<p>在自己定义Vendor Requests时，建议参考Requests的数据域定义和其他设备类标准的定义，但也可以根据实际需要进行修改。</p>
+<h2 id="描述符的格式和类型"><a href="#描述符的格式和类型" class="headerlink" title="描述符的格式和类型"></a>描述符的格式和类型</h2><p>与Requests类似，USB Descriptors也可以分为Standard、Class和Vendor，但格式并不完全一致，而且对于同一种描述符也可能是可变的。</p>
+<h3 id="描述符的格式"><a href="#描述符的格式" class="headerlink" title="描述符的格式"></a>描述符的格式</h3><p>虽然描述符的格式千差万别，但是有些描述符的格式确实类似的。例如，所有的Standard Descriptors的第0和第1个字节都分别是bLength和bDescriptorType，如果Class Descriptors或Vendor Descriptors使用了类似的结构，那么在定义描述符时，就最好与类似功能的Standard Descriptors使用类似的结构<del>（说起来真是绕口）</del>。</p>
+<h3 id="Standard-Descriptors"><a href="#Standard-Descriptors" class="headerlink" title="Standard Descriptors"></a>Standard Descriptors</h3><p>Standard Descriptors的bDescriptorType共有8种，如表9-5所示。除了INTERFACE_POWER找不到，且DEVICE_QUALIFIER等价于DEVICE、OTHER_SPEED_CONFIGURATION等价于CONFIGURATION之外<em>（当然数据域并不相同，因为省略了一部分重复信息）</em>，剩下的没什么好说的，看标准吧。</p>
+<h3 id="Class-Descriptors"><a href="#Class-Descriptors" class="headerlink" title="Class Descriptors"></a>Class Descriptors</h3><p>Class Descriptors包含了设备类标准中定义的各种描述符<sup>注2</sup>，这些描述符都符合相关设备类的标准。</p>
+<h3 id="Vendor-Descriptors"><a href="#Vendor-Descriptors" class="headerlink" title="Vendor Descriptors"></a>Vendor Descriptors</h3><p>Vendor Desriptors包含了Vendor自定义的标准中定义的各种描述符。</p>
+<h2 id="设备标准请求与响应的流程"><a href="#设备标准请求与响应的流程" class="headerlink" title="设备标准请求与响应的流程"></a>设备标准请求与响应的流程</h2><p>这部分内容实际上是和后面文章中要提的USB Device状态机设计是重合的，因此我们只说明<strong>对于描述符请求需要回应的内容</strong> <em>（即bRequest为GET_DESCRIPTOR时的请求）</em>，而略去其他的部分。</p>
+<h3 id="bDescriptorType-DEVICE"><a href="#bDescriptorType-DEVICE" class="headerlink" title="bDescriptorType == DEVICE"></a><code>bDescriptorType == DEVICE</code></h3><p>设备描述符通常是Host向Device请求的第一个描述符，因为Device Descriptor通常记录了设备的最基本信息。需要注意的有以下几点：</p>
+<ol>
+<li>bcdUSB的值会影响接下来的请求。举个例子，如果bcdUSB的值为200H<em>（意味着使用USB 2.0标准）</em>，但此时Device工作在全速模式下，则Host会紧接着发送Device_Qualifier描述符的请求，以尝试获得Device在高速模式下的信息。对于使用USB 2.0标准的全速设备，必须要正确处理此请求，下面再提。</li>
+<li>bDeviceClass、bDeviceSubClass和bDeviceProtocol的值必须符合要求。在USB标准<sup>注1</sup>中，规定只有在<strong>Device Descriptor</strong>或者<strong>Interface Descriptor</strong>中才有关于Class的信息，而Class应在哪里声明需要满足<strong>设备类标准</strong><sup>注2</sup>的定义。对于Class在Device Descriptor中声明的情况，Interface Descriptor中就有可能不需要再声明，反之亦然。对于不指定Class的情况，这三项应当保持为0<em>（对于某些设备类标准）</em>或FFH<em>（对于Vendor自定的标准）</em>。</li>
+<li>bMaxPacketSize0的选择与当前工作的速度有关。简单来说，低速时只能为8，高速时只能为64，而全速时只能为8、16、32、64中的一个。</li>
+<li>对于iManufacturer、iProduct和iSerialNumber不为0的情况，数据域的值表示了String Descriptor的编号，Host会紧接着请求对应的String Descriptor。</li>
+</ol>
+<h3 id="bDescriptorType-DEVICE-QUALIFIER"><a href="#bDescriptorType-DEVICE-QUALIFIER" class="headerlink" title="bDescriptorType == DEVICE_QUALIFIER"></a><code>bDescriptorType == DEVICE_QUALIFIER</code></h3><p>前面已经提到这个描述符了，简单来说就是，如果Host发出了这个请求，且Device确实可以工作其它速度下，那么Device就必须返回该描述符；否则，Device应该回应<strong>STALL</strong>，以表示不支持该功能。这对于bcdUSB为200H的全速设备来说是需要注意的一点。</p>
+<h3 id="bDescriptorType-CONFIGURATION"><a href="#bDescriptorType-CONFIGURATION" class="headerlink" title="bDescriptorType == CONFIGURATION"></a><code>bDescriptorType == CONFIGURATION</code></h3><p>在Host向Device请求设备的配置时，返回的不只是Configuration Descriptor，而是要包括<strong>Configuration层次下的所有操作符</strong>；也就是说，回应的内容可能会出现以下的操作符：</p>
+<ul>
+<li>Configuration Descriptor</li>
+<li>Interface Descriptor</li>
+<li>Endpoint Descriptor</li>
+<li>Class-specific Descriptor</li>
+</ul>
+<p>那么，回应的操作符应该按照什么样的顺序进行排列呢？我们来举个例子复杂点的例子。相信无需多言，大家应该能够理解如何回复配置的请求了。</p>
+<p><img src="usb-2.0-get-descriptor-configuration-example.svg" alt="一个使用GetDescriptor获取配置的例子"></p>
+<p>上图有几点是应当在意的：</p>
+<ol>
+<li>Descriptor的定义方式与之前的框架非常相似。但是，还是有两点不同：一是Interface和Alternate Setting都被定义在Interface Descriptor中<sup>注7</sup>，二是设备类定义的描述符<em>（如果有的话）</em>一般是紧跟在Endpoint Descriptor之后被定义。</li>
+<li>在回应关于配置的请求时，需要按照<strong>先序遍历</strong>的方式进行的。所谓的先序遍历，就是“先访问根节点再访问其子树”的过程，这样可以保证Host获得完整的信息。在对描述符形成的树状结构进行先序遍历后，得到的就是如图所示的结果。</li>
+<li>一个配置内所有的描述符都是<strong>首尾相连</strong>的，不需要进行额外的分割操作。也就是说，我们可以事先将所有描述符定义为一个没有分隔符的数组，并且在回复时将这个数组的所有内容按照先后顺序发送到Host即可。当然，在发送时需要满足数据长度不超过bMaxPacketSize0的条件，且最后一个数据包也要满足长度小于bMaxPacketSize0。</li>
+<li>在2中，我们可以发现有一个问题：请求时回复的数据总长度并不是个定值，也就是说Host无法提前了解到Request中的bLength应该被设置成何值。这个问题的解决方法是，在第一次请求配置时，Device首先回复的<strong>只有</strong>Configuration Descriptor，而后Host需要在Configuration Descriptor中读取wTotalLength，之后再发起一次同样的请求，区别是这次bLength会被设置为wTotalLength。这样就解决了无法提前获知数据长度的问题。</li>
+</ol>
+<p>对于请求配置仍有问题的同学，建议使用协议分析工具<em>（强烈推荐wireshark）</em>抓次包看看，会对请求配置有更深刻的理解。</p>
+<h3 id="bDescriptorType-OTHER-SPEED-CONFIGURATION"><a href="#bDescriptorType-OTHER-SPEED-CONFIGURATION" class="headerlink" title="bDescriptorType == OTHER_SPEED_CONFIGURATION"></a><code>bDescriptorType == OTHER_SPEED_CONFIGURATION</code></h3><p>这个与CONFIGURATION的情况类似，就不再多说了。如果DEVICE_QUALIFIER的回复为STALL，那么此请求的回复也应为STALL。</p>
+<h3 id="bDescriptorType-STRING"><a href="#bDescriptorType-STRING" class="headerlink" title="bDescriptorType == STRING"></a><code>bDescriptorType == STRING</code></h3><p>请求字符串描述符。这个要分成两种情况讨论：</p>
+<ol>
+<li>Descriptor Index为0的情况<em>（注意不是wIndex！）</em>。此时Device要回复的是<strong>支持的LANGID数组</strong>，以向Host表明其支持的LANGID。如果没有String Descriptor，那么就不应该回复LANGID数组，也就是bLength为2。</li>
+<li>Descriptor Index不为0的情况。此时<strong>wIndex</strong>定义的是字符串描述符的LANGID，Device应该根据LANGID来回复合适的字符串描述符。回复的bString数据域应该使用<strong>Unicode编码</strong>。</li>
+</ol>
+<h3 id="bDescriptorType-为其它值"><a href="#bDescriptorType-为其它值" class="headerlink" title="bDescriptorType 为其它值"></a><code>bDescriptorType</code> 为其它值</h3><p>除了出处不明的INTERFACE_POWER还需要进一步查阅资料之外，bDescriptorType取其它值都是非法的，直接回复STALL就是了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>说了这么多，感觉还是不能很好地将USB关于请求和描述符的部分梳理清楚，主要还是这部分知识点过于支离破碎的缘故。希望这篇文章能让大家先有个粗浅的认知，而后应当结合标准仔细阅读，这样方能掌握相关的概念。</p>
+<hr>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
+<li><a href="http://www.usb.org/developers/docs/usb20_docs/" target="_blank" rel="external">USB Specification Revision 2.0</a></li>
+<li><a href="http://www.usb.org/developers/docs/devclass_docs/" target="_blank" rel="external">USB Device Class Specifications</a></li>
+<li>为了使文章更容易理解，Standard与Specification都翻译成标准，但意思其实并不相同，后者翻译成“规范”或许更为合适，但不符合人们的表达习惯，因此本文使用上述翻译。</li>
+<li>即Alternate Settings，由于没有找到合适的中文翻译，所以用了这么一个词，意会一下即可。</li>
+<li>举个例子，如果共有5个String Descriptors，那么可指定的Index是0到4。</li>
+<li>USB 2.0标准中第259页的第3行：… The device must have its power cycled to exit test mode.</li>
+<li>USB标准并没有规定应该按照怎样的顺序排列Interface Descriptor；也就是说，对于描述符组成的树状结构，Interface这一级的遍历顺序是任意的。这也适用于Endpoint Descriptor以及可能出现的Class-specified Descriptor，除非有额外的要求。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.metrocores.com/usb/usb-2.0-requests-and-descriptors.html" data-id="cj87fihws000b37lgy85dus0q" class="article-share-link">Share</a>
+      
+        <a href="http://www.metrocores.com/usb/usb-2.0-requests-and-descriptors.html#disqus_thread" class="article-comment-link">留言</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">USB</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/usb/usb-2.0-transfers.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">USB 2.0的传输策略详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/usb/">USB</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/others/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/usb/">USB</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/usb/" style="font-size: 10px;">USB</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/usb/usb-2.0-requests-and-descriptors.html">USB 2.0的请求与描述符</a>
+          </li>
+        
+          <li>
+            <a href="/usb/usb-2.0-transfers.html">USB 2.0的传输策略详解</a>
+          </li>
+        
+          <li>
+            <a href="/usb/usb-2.0-manual.html">USB 2.0标准手册和基本概念</a>
+          </li>
+        
+          <li>
+            <a href="/usb/index.html">USB标准的开发计划与文章列表</a>
+          </li>
+        
+          <li>
+            <a href="/brief-introduction-of-the-blog.html">博客简介</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Metro<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">主页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于我</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'metrocores';
+  
+  var disqus_url = 'http://www.metrocores.com/usb/usb-2.0-requests-and-descriptors.html';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

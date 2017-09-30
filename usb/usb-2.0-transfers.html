@@ -9,7 +9,7 @@
 <meta name="keywords" content="USB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="USB 2.0的传输策略详解">
-<meta property="og:url" content="http://www.metrocores.com/usb/usb-2.0-transfer.html">
+<meta property="og:url" content="http://www.metrocores.com/usb/usb-2.0-transfers.html">
 <meta property="og:site_name" content="MetroCores">
 <meta property="og:description" content="本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。在阅读本文前，强烈建议读者首先阅读USB 2.0标准手册和基本概念，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。">
 <meta property="og:locale" content="zh-CN">
@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-isochronous-transfers-write-sequences.svg">
 <meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-interrupt-transfers-sequences.svg">
 <meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-bulk-transfers-sequences.svg">
-<meta property="og:updated_time" content="2017-09-19T14:28:43.804Z">
+<meta property="og:updated_time" content="2017-09-22T12:54:56.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="USB 2.0的传输策略详解">
 <meta name="twitter:description" content="本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。在阅读本文前，强烈建议读者首先阅读USB 2.0标准手册和基本概念，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。">
@@ -70,9 +70,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-usb/usb-2.0-transfer" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-usb/usb-2.0-transfers" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/usb/usb-2.0-transfer.html" class="article-date">
+    <a href="/usb/usb-2.0-transfers.html" class="article-date">
   <time datetime="2017-09-17T16:00:00.000Z" itemprop="datePublished">2017-09-18</time>
 </a>
     
@@ -96,7 +96,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本文详细地解释了USB 2.0的传输策略，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。<br>在阅读本文前，强烈建议读者首先阅读<a href="/usb/usb-2.0-manual.html" title="USB 2.0标准手册和基本概念">USB 2.0标准手册和基本概念</a>，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
+        <p>本文详细地解释了USB 2.0的<strong>传输策略</strong>，力求将USB 2.0标准中的概念进行整合，并以逻辑严密、条理清晰的方式表现出来，以便研究USB 2.0的传输策略之需。<br>在阅读本文前，强烈建议读者首先阅读<a href="/usb/usb-2.0-manual.html" title="USB 2.0标准手册和基本概念">USB 2.0标准手册和基本概念</a>，或者对USB 2.0的基础概念和数据流模型有一定的认识。建议在阅读完本文后阅读USB 2.0标准中的相关部分。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
 <h2 id="USB-2-0的数据传输设计思路"><a href="#USB-2-0的数据传输设计思路" class="headerlink" title="USB 2.0的数据传输设计思路"></a>USB 2.0的数据传输设计思路</h2><p>咳咳，这似乎是个很大的话题。虽然先讲这个话题似乎不符合我们先思考后总结的习惯，但是我认为更重要的还是首先理解概念，之后再用概念来指导我们的设计，这也是符合设计方法学的思路。</p>
 <p>言归正传，USB 2.0的数据传输方式是经过精心设计的，最主要的目的就是：在尽可能<strong>降低设备的设计复杂度</strong>的前提下，提供多种传输方式，以应对不同场合的需要。这样做的原因也很简单：Host的部分可以被复用，而且已经有了完善的解决方案<em>（包括Host Controller、USB总线驱动和USB设备驱动）</em>；而Device的数量远大于Host，因此应该优先考虑Device的设计复杂度。<br>在USB标准<sup>注1</sup>中，关于数据传输的定义比较分散，我也只能做到管中窥豹，不过这对我们理解USB 2.0还是很有帮助的。</p>
 <h3 id="Host-is-Master-Device-is-Slave"><a href="#Host-is-Master-Device-is-Slave" class="headerlink" title="Host is Master, Device is Slave"></a>Host is Master, Device is Slave</h3><p>这个算是USB 2.0中最重要的概念之一了。为了降低Device的设计复杂度，Device被定义为只能<strong>被动接受</strong>来自Host的请求，包括设备配置和读写。我们来举几个例子：</p>
@@ -334,7 +334,7 @@
 <hr>
 <h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ol>
 <li><a href="http://www.usb.org/developers/docs/usb20_docs/" target="_blank" rel="external">USB Specification Revision 2.0</a></li>
-<li>其实就是EOP，EOP并不是Packet，这点与SO不同。</li>
+<li>其实就是EOP，EOP并不是Packet，这点与SOF不同。</li>
 <li>注意Data Toggle Synchronization是在多个Transaction之间进行同步验证的。也就是说，Handshake Packet是否正确发送只能在下次传输开始后才能知道，而且下次的传输可能会因为各种原因导致Data Packet中的PID应当恢复到初始状态，从而无法判定Handshake的正确性。<del>这个问题仔细想想还是很蛋疼的<del></del></del></li>
 <li>PING transaction是为数不多的没有Data Packet的transaction。我没有找到USB 2.0标准中的相关文字，但是Figure 8-30中可以看到PING transaction确实没有Data Packet。</li>
 <li>准确来说SOF Packets最高，不过呢，who fxxking cares（滑稽</li>
@@ -346,9 +346,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.metrocores.com/usb/usb-2.0-transfer.html" data-id="cj7rp4fnt000a7wlgrc4xaw8z" class="article-share-link">Share</a>
+      <a data-url="http://www.metrocores.com/usb/usb-2.0-transfers.html" data-id="cj87fihwr000a37lgndzmqqz7" class="article-share-link">Share</a>
       
-        <a href="http://www.metrocores.com/usb/usb-2.0-transfer.html#disqus_thread" class="article-comment-link">留言</a>
+        <a href="http://www.metrocores.com/usb/usb-2.0-transfers.html#disqus_thread" class="article-comment-link">留言</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/usb/">USB</a></li></ul>
@@ -358,6 +358,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/usb/usb-2.0-requests-and-descriptors.html" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          USB 2.0的请求与描述符
+        
+      </div>
+    </a>
   
   
     <a href="/usb/usb-2.0-manual.html" id="article-nav-older" class="article-nav-link-wrap">
@@ -426,7 +435,11 @@
       <ul>
         
           <li>
-            <a href="/usb/usb-2.0-transfer.html">USB 2.0的传输策略详解</a>
+            <a href="/usb/usb-2.0-requests-and-descriptors.html">USB 2.0的请求与描述符</a>
+          </li>
+        
+          <li>
+            <a href="/usb/usb-2.0-transfers.html">USB 2.0的传输策略详解</a>
           </li>
         
           <li>
@@ -472,7 +485,7 @@
 <script>
   var disqus_shortname = 'metrocores';
   
-  var disqus_url = 'http://www.metrocores.com/usb/usb-2.0-transfer.html';
+  var disqus_url = 'http://www.metrocores.com/usb/usb-2.0-transfers.html';
   
   (function(){
     var dsq = document.createElement('script');

@@ -15,7 +15,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-communication-flow-model.svg">
 <meta property="og:image" content="http://www.metrocores.com/usb/usb-2.0-packets.svg">
-<meta property="og:updated_time" content="2017-09-19T13:17:34.658Z">
+<meta property="og:updated_time" content="2017-09-23T13:06:08.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="USB 2.0标准手册和基本概念">
 <meta name="twitter:description" content="本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。">
@@ -92,7 +92,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的基本概念，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
+        <p>本文为USB 2.0标准手册，同时简单介绍了USB 2.0中的<strong>基本概念</strong>，力求使读者对USB 2.0有一定的了解，并且明确下一步的研究方向。<br><a id="more"></a><br>原创文章，转载请注明出处：MetroCores, <a href="http://www.metrocores.com">www.metrocores.com</a>.</p>
 <h2 id="USB-2-0标准"><a href="#USB-2-0标准" class="headerlink" title="USB 2.0标准"></a>USB 2.0标准</h2><p>在USB 3.1尚未大规模普及的今天，USB 2.0仍是最常用的标准。有意思的是，USB 2.0标准同时将低速<em>(Low Speed, 1.5 Mbps)</em>、全速<em>(Full Speed, 12 Mbps)</em>和高速<em>(High Speed, 480 Mbps)</em>三种不同速度整合在一起，构成了一套较为完整的解决方案。<em>（而USB 3.1更像是USB 2.0的扩展，当然相互之间还是兼容的。）</em> </p>
 <p>值得一提的是，USB 2.0标准的眼光比I<sup>2</sup>C之类的协议要深远得多。USB 2.0标准包括但不限于以下这些内容：</p>
 <ul>
@@ -142,7 +142,7 @@
 <ol>
 <li>最底层的部分是<strong>USB Bus Interface</strong>，其实就相当于Host Controller去掉了状态控制的部分，没啥好说的。</li>
 <li>中间是<strong>USB Logical Device</strong>，针对每个Pipe定义了一个接口，称之为<strong>Endpoint</strong>，即<strong>端点</strong>。Endpoint和Pipe一一对应，因此一共有16个Endpoint，其中对应于Default Pipe的是Endpoint 0。Endpoint是我们在USB Device开发中经常接触的一个概念，因此需要好好理解。</li>
-<li>那么剩下的就是<strong>Function</strong>了。Function是一个设备的所有功能的集合，Function可以被划分成多个Interface，每个Interface连接一系列Pipe Bundle，代表了每个不同的功能。</li>
+<li>那么剩下的就是<strong>Function</strong>了。Function是一个设备的所有功能的集合，Function可以被划分成多个<strong>Interface</strong>，每个Interface连接一系列Pipe Bundle，代表了每个不同的功能。</li>
 </ol>
 <p>在有了通信流的概念之后，就可以完整地定义USB的数据流模型了。</p>
 <h3 id="传输和传输类型"><a href="#传输和传输类型" class="headerlink" title="传输和传输类型"></a>传输和传输类型</h3><p>在USB中，数据交互的最基本单位是<strong>Transaction</strong>。一次Transaction包括了<strong>Token</strong>、<em>（可选的）</em>  <strong>Data</strong>和<em>（可选的）</em> <strong>Handshake</strong>这几种<strong>Packet</strong><sup>注4</sup>，而<em>（在一个Frame内的）</em>多个相关的Transaction则构成了一次<strong>Transfer</strong>。<del>（感觉像在说绕口令一样）</del></p>
@@ -187,7 +187,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.metrocores.com/usb/usb-2.0-manual.html" data-id="cj7rp4fnq00077wlgklaz3ume" class="article-share-link">Share</a>
+      <a data-url="http://www.metrocores.com/usb/usb-2.0-manual.html" data-id="cj87fihwp000737lghdf1vd9c" class="article-share-link">Share</a>
       
         <a href="http://www.metrocores.com/usb/usb-2.0-manual.html#disqus_thread" class="article-comment-link">留言</a>
       
@@ -200,7 +200,7 @@
     
 <nav id="article-nav">
   
-    <a href="/usb/usb-2.0-transfer.html" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/usb/usb-2.0-transfers.html" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
@@ -276,7 +276,11 @@
       <ul>
         
           <li>
-            <a href="/usb/usb-2.0-transfer.html">USB 2.0的传输策略详解</a>
+            <a href="/usb/usb-2.0-requests-and-descriptors.html">USB 2.0的请求与描述符</a>
+          </li>
+        
+          <li>
+            <a href="/usb/usb-2.0-transfers.html">USB 2.0的传输策略详解</a>
           </li>
         
           <li>
